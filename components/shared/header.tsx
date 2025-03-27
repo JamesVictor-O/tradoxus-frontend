@@ -13,7 +13,7 @@ const navLinks = [
 	{ name: "Gamification", path: "/gamification" },
 	{ name: "Web3", path: "/web3" },
 	{ name: "Dashboard", path: "/dashboard" },
-	{ name: "Profile", path: "/profile" },
+	{ name: "Profile", path: "/tradingdemo" },
 ];
 
 const activeClass = "text-blue-400 hover:text-blue-300";
