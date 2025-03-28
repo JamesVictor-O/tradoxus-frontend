@@ -16,30 +16,40 @@ export default function TradePage() {
   
   const handleTrade = async (type: "BUY" | "SELL") => {
     try {
+      // Convert quantity to number explicitly
+      const numericQuantity = Number(quantity)
+      
       const response = await fetch("/api/trade", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: "1234", 
+          userId: "1234",
           symbol,
-          quantity,
+          quantity: numericQuantity,
           type,
         }),
-      });
-
+      })
+  
+      const data = await response.json()
+      
       if (!response.ok) {
-        throw new Error("Trade failed");
+        // Handle API error responses
+        throw new Error(data.error || "Trade failed")
       }
-
-      const data = await response.json();
-      setError(`Trade successful: ${data.trade.symbol} at ${data.trade.price}`);
+  
+      setError(`Trade successful: ${data.trade.symbol} at ${data.trade.price}`)
+      setSymbol('')
+      setQuantity(0)
+      
     } catch (error) {
-      console.error("Trade error:", error);
-      setError("Trade failed. Please try again.");
+      console.error("Trade error:", error)
+      setError(error instanceof Error ? error.message : "Trade failed")
+      setSymbol('')
+      setQuantity(0)
     }
-  };
+  }
   
   return (
     <div className="flex justify-center items-center min-h-screen p-4">

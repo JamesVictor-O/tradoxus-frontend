@@ -1,0 +1,150 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '../../../lib/db';
+// import { prisma } from '@/lib/db';
+import { fetchStockQuote } from '../../../lib/marketDataService';
+
+
+console.log(prisma)
+
+// Helper functions for better organization
+async function validateInput(userId: string, symbol: string, quantity: number, type: string) {
+  if (!userId || !symbol || !quantity || !type) {
+    throw new Error('Missing required fields');
+  }
+  
+  if (isNaN(quantity) || quantity <= 0) {
+    throw new Error('Quantity must be a positive number');
+  }
+
+  if (!['BUY', 'SELL'].includes(type)) {
+    throw new Error('Invalid trade type');
+  }
+}
+
+async function handleBuyTransaction(
+  tx: any,
+  portfolio: any,
+  symbol: string,
+  quantity: number,
+  price: number,
+  totalCost: number
+) {
+  const existingPosition = await tx.position.findFirst({
+    where: { portfolioId: portfolio.id, symbol }
+  });
+
+  return tx.position.upsert({
+    where: { id: existingPosition?.id || '' },
+    update: {
+      quantity: (existingPosition?.quantity || 0) + quantity,
+      avgCost: existingPosition
+        ? ((existingPosition.avgCost * existingPosition.quantity) + (price * quantity)) /
+          (existingPosition.quantity + quantity)
+        : price
+    },
+    create: {
+      portfolioId: portfolio.id,
+      symbol,
+      quantity,
+      avgCost: price
+    }
+  });
+}
+
+async function handleSellTransaction(
+  tx: any,
+  portfolio: any,
+  symbol: string,
+  quantity: number
+) {
+  const existingPosition = await tx.position.findFirst({
+    where: { portfolioId: portfolio.id, symbol }
+  });
+
+  if (!existingPosition || existingPosition.quantity < quantity) {
+    throw new Error('Insufficient shares to sell');
+  }
+
+  if (existingPosition.quantity === quantity) {
+    return tx.position.delete({ where: { id: existingPosition.id } });
+  } else {
+    return tx.position.update({
+      where: { id: existingPosition.id },
+      data: { quantity: existingPosition.quantity - quantity }
+    });
+  }
+}
+
+export async function POST(req: Request) {
+    try {
+      // Parse and validate input
+      const { userId, symbol, quantity, type } = await req.json();
+      await validateInput(userId, symbol, quantity, type);
+  
+      // Get current stock price
+      const quote = await fetchStockQuote(symbol);
+      const totalCost = quote.price * quantity;
+  
+      // Execute transaction
+      const result = await prisma.$transaction(async (tx) => {
+        // Check portfolio exists
+        const portfolio = await tx.portfolio.findUnique({ where: { userId } });
+        if (!portfolio) throw new Error('Portfolio not found');
+  
+        // Check sufficient funds for buy
+        if (type === 'BUY' && portfolio.balance < totalCost) {
+          throw new Error('Insufficient funds');
+        }
+  
+        // Update portfolio balance
+        const updatedPortfolio = await tx.portfolio.update({
+          where: { userId },
+          data: {
+            balance: type === 'BUY' 
+              ? { decrement: totalCost } 
+              : { increment: totalCost }
+          }
+        });
+  
+        // Handle position updates
+        if (type === 'BUY') {
+          await handleBuyTransaction(tx, updatedPortfolio, symbol, quantity, quote.price, totalCost);
+        } else {
+          await handleSellTransaction(tx, updatedPortfolio, symbol, quantity);
+        }
+  
+        // Record the trade
+        const trade = await tx.trade.create({
+          data: {
+            portfolioId: updatedPortfolio.id,
+            symbol,
+            type,
+            quantity,
+            price: quote.price
+          }
+        });
+  
+        return { portfolio: updatedPortfolio, trade, quote };
+      });
+  
+      // Explicitly set Content-Type to application/json
+      return new NextResponse(JSON.stringify(result), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+    } catch (error) {
+      console.error('Trade error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Trade failed';
+      
+      // Explicitly set Content-Type to application/json for error response
+      return new NextResponse(JSON.stringify({ error: errorMessage }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+  }
