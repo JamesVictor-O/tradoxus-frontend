@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import Button from '@/components/ui/button'; // Ensure Button supports 'disabled' prop or replace with a native button
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChevronDown } from 'lucide-react';
-import { executeTrade } from '@/lib/tradeService';
+
 
 export default function TradePage() {
   const [symbol, setSymbol] = useState('');
@@ -13,28 +13,34 @@ export default function TradePage() {
   const [error, setError] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleTrade = async () => {
-    setError(null);
-    if (!symbol || quantity <= 0) {
-      setError('Please enter a valid symbol and quantity');
-      return;
-    }
-
+  
+  const handleTrade = async (type: "BUY" | "SELL") => {
     try {
-      const result = await executeTrade(
-        'user-id-from-session',
-        symbol.toUpperCase(),
-        quantity,
-        tradeType
-      );
-      console.log('Trade executed:', result);
-      // Reset form or show success message
+      const response = await fetch("/api/trade", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: "1234", 
+          symbol,
+          quantity,
+          type,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Trade failed");
+      }
+
+      const data = await response.json();
+      setError(`Trade successful: ${data.trade.symbol} at ${data.trade.price}`);
     } catch (error) {
-      console.error('Trade failed:', error);
-      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      console.error("Trade error:", error);
+      setError("Trade failed. Please try again.");
     }
   };
-
+  
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="w-full max-w-md shadow-lg">
@@ -119,7 +125,7 @@ export default function TradePage() {
             )}
 
             <button 
-              onClick={handleTrade} 
+              onClick={()=>handleTrade(tradeType)} 
               disabled={!symbol || quantity <= 0}
               style={{ width: '100%' }}
               className="bg-blue-500 text-white py-2 px-4 rounded disabled:opacity-50"
