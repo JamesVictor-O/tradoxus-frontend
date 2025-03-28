@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../../lib/db';
-// import { prisma } from '@/lib/db';
 import { fetchStockQuote } from '../../../lib/marketDataService';
 
 
-console.log(prisma)
+console.log('🔄 Route file loaded');
+console.log('Prisma client:', prisma ? 'Exists' : 'UNDEFINED');
 
-// Helper functions for better organization
+export const dynamic = 'force-dynamic'; // Opt out of static rendering
+export const runtime = 'nodejs';
 async function validateInput(userId: string, symbol: string, quantity: number, type: string) {
   if (!userId || !symbol || !quantity || !type) {
     throw new Error('Missing required fields');
@@ -75,76 +76,93 @@ async function handleSellTransaction(
   }
 }
 
-export async function POST(req: Request) {
-    try {
-      // Parse and validate input
-      const { userId, symbol, quantity, type } = await req.json();
-      await validateInput(userId, symbol, quantity, type);
+// export async function POST(req: Request) {
+//     try {
+//       // Parse and validate input
+//       const { userId, symbol, quantity, type } = await req.json();
+//       await validateInput(userId, symbol, quantity, type);
   
-      // Get current stock price
-      const quote = await fetchStockQuote(symbol);
-      const totalCost = quote.price * quantity;
+//       // Get current stock price
+//       const quote = await fetchStockQuote(symbol);
+//       const totalCost = quote.price * quantity;
   
-      // Execute transaction
-      const result = await prisma.$transaction(async (tx) => {
-        // Check portfolio exists
-        const portfolio = await tx.portfolio.findUnique({ where: { userId } });
-        if (!portfolio) throw new Error('Portfolio not found');
+//       // Execute transaction
+//       const result = await prisma.$transaction(async (tx) => {
+//         // Check portfolio exists
+//         const portfolio = await tx.portfolio.findUnique({ where: { userId } });
+//         if (!portfolio) throw new Error('Portfolio not found');
   
-        // Check sufficient funds for buy
-        if (type === 'BUY' && portfolio.balance < totalCost) {
-          throw new Error('Insufficient funds');
-        }
+//         // Check sufficient funds for buy
+//         if (type === 'BUY' && portfolio.balance < totalCost) {
+//           throw new Error('Insufficient funds');
+//         }
   
-        // Update portfolio balance
-        const updatedPortfolio = await tx.portfolio.update({
-          where: { userId },
-          data: {
-            balance: type === 'BUY' 
-              ? { decrement: totalCost } 
-              : { increment: totalCost }
-          }
-        });
+//         // Update portfolio balance
+//         const updatedPortfolio = await tx.portfolio.update({
+//           where: { userId },
+//           data: {
+//             balance: type === 'BUY' 
+//               ? { decrement: totalCost } 
+//               : { increment: totalCost }
+//           }
+//         });
   
-        // Handle position updates
-        if (type === 'BUY') {
-          await handleBuyTransaction(tx, updatedPortfolio, symbol, quantity, quote.price, totalCost);
-        } else {
-          await handleSellTransaction(tx, updatedPortfolio, symbol, quantity);
-        }
+//         // Handle position updates
+//         if (type === 'BUY') {
+//           await handleBuyTransaction(tx, updatedPortfolio, symbol, quantity, quote.price, totalCost);
+//         } else {
+//           await handleSellTransaction(tx, updatedPortfolio, symbol, quantity);
+//         }
   
-        // Record the trade
-        const trade = await tx.trade.create({
-          data: {
-            portfolioId: updatedPortfolio.id,
-            symbol,
-            type,
-            quantity,
-            price: quote.price
-          }
-        });
+//         // Record the trade
+//         const trade = await tx.trade.create({
+//           data: {
+//             portfolioId: updatedPortfolio.id,
+//             symbol,
+//             type,
+//             quantity,
+//             price: quote.price
+//           }
+//         });
   
-        return { portfolio: updatedPortfolio, trade, quote };
-      });
+//         return { portfolio: updatedPortfolio, trade, quote };
+//       });
   
-      // Explicitly set Content-Type to application/json
-      return new NextResponse(JSON.stringify(result), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+//       // Explicitly set Content-Type to application/json
+//       return new NextResponse(JSON.stringify(result), {
+//         status: 200,
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
   
-    } catch (error) {
-      console.error('Trade error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Trade failed';
+//     } catch (error) {
+//       console.error('Trade error:', error);
+//       const errorMessage = error instanceof Error ? error.message : 'Trade failed';
       
-      // Explicitly set Content-Type to application/json for error response
-      return new NextResponse(JSON.stringify({ error: errorMessage }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    }
+//       // Explicitly set Content-Type to application/json for error response
+//       return new NextResponse(JSON.stringify({ error: errorMessage }), {
+//         status: 400,
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
+//     }
+//   }
+
+export async function POST() {
+  try {
+    // Test Prisma
+    const testQuery = await prisma.$queryRaw`SELECT 1+1 as result`;
+    console.log('Prisma test:', testQuery);
+
+    // Test market data service
+    const testQuote = await fetchStockQuote('AAPL');
+    console.log('Market data test:', testQuote);
+
+    return NextResponse.json({ prisma: !!testQuery, marketData: !!testQuote });
+  } catch (e) {
+    console.error('Dependency test failed:', e);
+    return NextResponse.json({ error: e.message }, { status: 500 });
   }
+}
