@@ -9,7 +9,7 @@ export default function PerformancePage() {
 
   if (isLoading) return <div>Loading...</div>
 
-  // Comprehensive error handling
+
   if (error) {
     let errorMessage = 'An unknown error occurred'
     try {
@@ -27,7 +27,6 @@ export default function PerformancePage() {
     return <div className="text-red-500">Error: {errorMessage}</div>
   }
 
-  // Safely process chart data
   let chartData: {date: string; value: number}[] = []
   try {
     if (portfolio?.values && Array.isArray(portfolio.values)) {
