@@ -19,7 +19,7 @@ export function usePortfolio() {
     async function loadPortfolio() {
       try {
         setIsLoading(true)
-        const response = await axios.get<Portfolio>('/api/portfolio')
+        const response =  axios.get<Portfolio>('/api/portfolio')
         setPortfolio(response.data)
         setError(null)
       } catch (err) {

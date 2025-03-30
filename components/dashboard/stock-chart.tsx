@@ -6,7 +6,7 @@ import { LineChart } from 'recharts'
 import {  Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import Button from '../ui/button'
+import {Button} from '../ui/button'
 
 export function StockChart() {
   const [symbol, setSymbol] = useState('AAPL')

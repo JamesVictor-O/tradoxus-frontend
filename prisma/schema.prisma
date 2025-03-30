@@ -9,16 +9,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String      @id @default(cuid())
+  email         String      @unique
   name          String?
-  portfolios    Portfolio[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  portfolios    Portfolio[]  // Relation to Portfolio
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
+
 model Portfolio {
   id          String     @id @default(cuid())
   name        String
+  userId      String     // Add this field
+  user        User       @relation(fields: [userId], references: [id])  // Add this relation
   cashBalance Float      @default(10000.00)
   positions   Position[]
   transactions Transaction[]

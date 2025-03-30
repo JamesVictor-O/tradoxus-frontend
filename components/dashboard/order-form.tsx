@@ -14,38 +14,45 @@ export function OrderForm() {
   const { portfolio, mutate } = usePortfolio()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
+    e.preventDefault();
+    setIsSubmitting(true);
+  
     try {
+      // Temporary hardcoded user ID for development
+      const tempUserId = "james"; // Replace with an actual user ID from your DB
+      
       const response = await fetch('/api/portfolio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          symbol,
+          symbol: symbol.trim().toUpperCase(),
           type: orderType,
           quantity: parseFloat(quantity),
+          userId: tempUserId // Hardcoded for now
         }),
-      })
-
+      });
+  
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Failed to place order')
+        const error = await response.json();
+        throw new Error(error.error || 'Trade failed');
       }
-
-      await mutate()
-      alert(`${orderType} order for ${quantity} shares of ${symbol} has been completed.`)
-      setSymbol('')
-      setQuantity('')
+  
+      const result = await response.json();
+      await mutate(); // Refresh data if using SWR
+      
+      alert(`${orderType} order for ${quantity} shares of ${symbol} executed at $${result.price}`);
+      setSymbol('');
+      setQuantity('');
+      
     } catch (error: any) {
-      alert(`Order failed: ${error.message}`)
+      console.error('Trade error:', error);
+      alert(`Order failed: ${error.message}`);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
-
+  };
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="flex flex-col gap-1">

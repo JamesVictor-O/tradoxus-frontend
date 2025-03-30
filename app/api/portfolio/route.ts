@@ -1,25 +1,145 @@
-// app/api/portfolio/route.ts
-import { NextResponse } from 'next/server'
-import { getPortfolio, createTransaction } from '@/lib/portfolio'
+export const dynamic = 'force-dynamic'; // Opt out of static caching
+export const runtime = 'nodejs'; // Explicitly use Node.js runtime
 
-// Simplified without auth
-export async function GET() {
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { fetchStockData } from '@/lib/stocks';
+
+export async function POST(req: Request) {
   try {
-    // Use a default portfolio ID or create one
-    const portfolio = await getPortfolio()
-    return NextResponse.json(portfolio)
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch portfolio' }, { status: 500 })
-  }
-}
+    console.log('Trade endpoint called'); // Debug log
+    
+    const { symbol, type, quantity, userId } = await req.json();
+    
+    // Validate input
+    if (!symbol || !type || !quantity || !userId) {
+      throw new Error('Missing required fields');
+    }
 
-export async function POST(request: Request) {
-  const { symbol, type, quantity } = await request.json()
+    // DEVELOPMENT TEMPORARY FIX: Auto-create user if doesn't exist
+    const user = await prisma.user.upsert({
+      where: { id: userId },
+      create: {
+        id: userId,
+        email: `temp+${userId}@example.com`,
+        name: "Temporary User",
+        password: "temporary_password" 
+      },
+      update: {}
+    });
 
-  try {
-    const transaction = await createTransaction(symbol, type, quantity)
-    return NextResponse.json(transaction)
+    // Auto-create portfolio if doesn't exist
+    const portfolio = await prisma.portfolio.upsert({
+      where: { userId },
+      create: {
+        name: "Main Portfolio",
+        cashBalance: 10000.00,
+        userId
+      },
+      update: {}
+    });
+
+    // Get current market price
+    const quote = await fetchStockData(symbol);
+    const totalCost = quote.price * quantity;
+
+    // Execute transaction
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Verify sufficient funds for BUY orders
+      if (type === 'BUY' && portfolio.cashBalance < totalCost) {
+        throw new Error('Insufficient funds');
+      }
+
+      // 2. Update portfolio balance
+      const updatedPortfolio = await tx.portfolio.update({
+        where: { id: portfolio.id },
+        data: {
+          cashBalance: type === 'BUY' 
+            ? { decrement: totalCost }
+            : { increment: totalCost }
+        }
+      });
+
+      // 3. Update/create position
+      if (type === 'BUY') {
+        await tx.position.upsert({
+          where: { portfolioId_symbol: { portfolioId: portfolio.id, symbol } },
+          create: {
+            portfolioId: portfolio.id,
+            symbol,
+            quantity,
+            avgPrice: quote.price
+          },
+          update: {
+            quantity: { increment: quantity },
+            avgPrice: {
+              // Recalculate weighted average price
+              divide: [
+                {
+                  add: [
+                    { multiply: ['$avgPrice', '$quantity'] },
+                    { multiply: [quote.price, quantity] }
+                  ]
+                },
+                { add: ['$quantity', quantity] }
+              ]
+            }
+          }
+        });
+      } else {
+        // SELL logic
+        const position = await tx.position.findUniqueOrThrow({
+          where: { portfolioId_symbol: { portfolioId: portfolio.id, symbol } }
+        });
+
+        if (position.quantity < quantity) {
+          throw new Error('Insufficient shares to sell');
+        }
+
+        if (position.quantity === quantity) {
+          await tx.position.delete({
+            where: { portfolioId_symbol: { portfolioId: portfolio.id, symbol } }
+          });
+        } else {
+          await tx.position.update({
+            where: { portfolioId_symbol: { portfolioId: portfolio.id, symbol } },
+            data: { quantity: { decrement: quantity } }
+          });
+        }
+      }
+
+      // 4. Record transaction
+      const trade = await tx.transaction.create({
+        data: {
+          portfolioId: portfolio.id,
+          symbol,
+          type,
+          quantity,
+          price: quote.price,
+          amount: totalCost
+        }
+      });
+
+      return { portfolio: updatedPortfolio, trade, quote };
+    });
+
+    return NextResponse.json(result, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    console.error('Trade error:', error);
+    return NextResponse.json(
+      { error: error.message },
+      { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 }
+
+// CREATE DATABASE tradoxtus;
+// CREATE USER tradoxtus_user WITH PASSWORD 'Durant@123';
+// GRANT ALL PRIVILEGES ON DATABASE tradoxtus TO tradoxtus_user;
+// \q
