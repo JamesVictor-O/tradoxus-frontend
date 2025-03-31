@@ -72,18 +72,9 @@ export async function POST(req: Request) {
           },
           update: {
             quantity: { increment: quantity },
-            avgPrice: {
-              // Recalculate weighted average price
-              divide: [
-                {
-                  add: [
-                    { multiply: ['$avgPrice', '$quantity'] },
-                    { multiply: [quote.price, quantity] }
-                  ]
-                },
-                { add: ['$quantity', quantity] }
-              ]
-            }
+            avgPrice: 
+              ((position.avgPrice * position.quantity) + (quote.price * quantity)) / 
+              (position.quantity + quantity)
           }
         });
       } else {
@@ -139,7 +130,3 @@ export async function POST(req: Request) {
   }
 }
 
-// CREATE DATABASE tradoxtus;
-// CREATE USER tradoxtus_user WITH PASSWORD 'Durant@123';
-// GRANT ALL PRIVILEGES ON DATABASE tradoxtus TO tradoxtus_user;
-// \q
