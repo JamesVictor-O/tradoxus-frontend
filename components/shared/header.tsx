@@ -136,7 +136,11 @@ export function Header() {
     "py-2 px-3 rounded-md hover:bg-gray-800 transition-colors block w-full text-center";
 
   return (
-    <header className="border-b border-gray-800 bg-transparent relative z-50 w-full">
+    <header
+      className={`${
+        pathname.startsWith("/admin/") || pathname === "/admin" ? "hidden" : ""
+      } border-b border-gray-800 bg-transparent relative z-50 w-full`}
+    >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Website Logo */}
