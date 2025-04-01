@@ -5,6 +5,18 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const navLinks = [
+	{ name: "Modules", path: "/modules" },
+	{ name: "Problem", path: "/problem" },
+	{ name: "Solution", path: "/solution" },
+	{ name: "Benefits", path: "/benefits" },
+	{ name: "Gamification", path: "/gamification" },
+	{ name: "Web3", path: "/web3" },
+	{ name: "Dashboard", path: "/dashboard" },
+	{ name: "Profile", path: "/tradingdemo" },
+];
+
+
 // Navigation structure with dropdowns
 const navigationStructure = [
   { name: "Home", path: "/", dropdown: false },
