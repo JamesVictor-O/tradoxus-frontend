@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1745997456253,
+    "ticker": "AAPL",
+    "date": "2025-03-31",
+    "direction": "long",
+    "entryPrice": 33,
+    "exitPrice": 34,
+    "notes": "",
+    "tags": ""
+  },
+  {
+    "id": 1745997708982,
+    "ticker": "AAPL",
+    "date": "2025-04-23",
+    "direction": "long",
+    "entryPrice": 345,
+    "exitPrice": 3455,
+    "notes": "",
+    "tags": ""
+  }
+]
