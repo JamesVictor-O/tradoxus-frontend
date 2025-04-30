@@ -13,10 +13,11 @@ interface CourseHeaderProps {
 }
 
 export function CourseHeader({ course, progress }: CourseHeaderProps) {
-  const progressPercentage =  
-    progress && progress.totalLessons > 0  
-      ? Math.round((progress.lessonsCompleted / progress.totalLessons) * 100)  
+  const progressPercentage =
+    progress && progress.totalLessons > 0
+      ? Math.round((progress.lessonsCompleted / progress.totalLessons) * 100)
       : 0;
+    
   
   return (
     <motion.div 

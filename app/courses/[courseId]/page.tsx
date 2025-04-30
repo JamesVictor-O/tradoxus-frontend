@@ -9,6 +9,7 @@ import { CourseHeader } from '@/components/ui/course-header';
 import { ModuleAccordion } from '@/components/ui/module-accordion';
 import { ArrowLeft } from 'lucide-react';
 import { Course, Lesson, Module, Progress } from '@/lib/mocksedu-data';
+import { theme } from '@/lib/theme';
 
 export default function CoursePage() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -95,7 +96,11 @@ export default function CoursePage() {
   return (
     <div className="container mx-auto p-6">
       <div className="mb-6">
-        <Link href="/courses" className="text-[#6366f1] decoration-none hover:underline flex items-center">
+        <Link
+          href="/courses"
+          className="decoration-none hover:underline flex items-center"
+          style={{ color: theme.colors.primary[500] }}
+        >
           <ArrowLeft className="w-4 h-4 mr-1" />
           Back to Courses
         </Link>

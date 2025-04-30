@@ -44,9 +44,11 @@ export default function LessonPage() {
         const lessonsData: Lesson[] = lessonsArrays.flat();
 
         // Sort all lessons by module order and then lesson order
+        // Sort all lessons by module order and then lesson order
+        const moduleMap = new Map(modulesData.map(m => [m.id, m]));
         const sortedLessons = lessonsData.sort((a, b) => {
-          const moduleA = modulesData.find(m => m.id === a.moduleId);
-          const moduleB = modulesData.find(m => m.id === b.moduleId);
+          const moduleA = moduleMap.get(a.moduleId);
+          const moduleB = moduleMap.get(b.moduleId);
           if (!moduleA || !moduleB) return 0;
           if (moduleA.order !== moduleB.order) {
             return moduleA.order - moduleB.order;
