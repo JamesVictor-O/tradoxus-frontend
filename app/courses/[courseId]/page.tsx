@@ -33,12 +33,17 @@ export default function CoursePage() {
         const modulesData = await CourseService.getCourseModules(courseId);
         setModules(modulesData);
         
-        // Fetch lessons for each module
+        // Fetch all module lessons in parallel
+        const lessonsPromises = modulesData.map(module =>  
+          LessonService.getModuleLessons(module.id)  
+            .then(lessons => ({ moduleId: module.id, lessons }))  
+        );
+
+        const lessonsResults = await Promise.all(lessonsPromises);
         const lessonsMap: { [moduleId: string]: Lesson[] } = {};
-        for (const module of modulesData) {
-          const moduleLessonsData = await LessonService.getModuleLessons(module.id);
-          lessonsMap[module.id] = moduleLessonsData;
-        }
+        lessonsResults.forEach(result => {
+          lessonsMap[result.moduleId] = result.lessons;
+        });
         setModuleLessons(lessonsMap);
         
         // Fetch user progress

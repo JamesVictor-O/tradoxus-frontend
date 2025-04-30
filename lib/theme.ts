@@ -1,5 +1,4 @@
-// Let's create a new file for our color theme
-// src/lib/theme.ts
+
 export const theme = {
     colors: {
       primary: {

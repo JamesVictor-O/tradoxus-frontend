@@ -1,4 +1,3 @@
-
 "use client";
 import React from 'react';
 import Image from 'next/image';
@@ -17,7 +16,7 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course, progress, index = 0 }: CourseCardProps) {
-  const progressPercentage = progress ? 
+  const progressPercentage = progress && progress.totalLessons > 0 ? 
     Math.round((progress.lessonsCompleted / progress.totalLessons) * 100) : 0;
 
   return (

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { LessonService } from '@/lib/services/lesson-service';
 import { ProgressService } from '@/lib/services/progress-service';
 import { CourseService } from '@/lib/services/course-service';
-import { Lesson, Module, Progress }  from '@/lib/mocksedu-data';
+import { Lesson, Module, Progress } from '@/lib/mocksedu-data';
 
 import { ContentRenderer } from '@/components/ui/content-renderer';
 import { LessonNavigation } from '@/components/ui/lesson-navigation';
@@ -26,24 +26,23 @@ export default function LessonPage() {
   useEffect(() => {
     async function fetchData() {
       if (!courseId || !lessonId) return;
-      
+
       try {
         setLoading(true);
         // Fetch lesson details
         const lessonData = await LessonService.getLesson(lessonId);
         setLesson(lessonData);
-        
+
         // Fetch course modules
         const modulesData = await CourseService.getCourseModules(courseId);
         setModules(modulesData);
-        
-        // Fetch all lessons for the course
-        const lessonsData: Lesson[] = [];
-        for (const module of modulesData) {
-          const moduleLessons = await LessonService.getModuleLessons(module.id);
-          lessonsData.push(...moduleLessons);
-        }
-        
+
+        // Fetch all lessons for the course in parallel
+        const lessonsArrays = await Promise.all(
+          modulesData.map((m) => LessonService.getModuleLessons(m.id))
+        );
+        const lessonsData: Lesson[] = lessonsArrays.flat();
+
         // Sort all lessons by module order and then lesson order
         const sortedLessons = lessonsData.sort((a, b) => {
           const moduleA = modulesData.find(m => m.id === a.moduleId);
@@ -54,9 +53,9 @@ export default function LessonPage() {
           }
           return a.order - b.order;
         });
-        
+
         setAllLessons(sortedLessons);
-        
+
         // Find previous and next lessons
         const currentIndex = sortedLessons.findIndex(l => l.id === lessonId);
         if (currentIndex > 0) {
@@ -65,14 +64,14 @@ export default function LessonPage() {
         if (currentIndex < sortedLessons.length - 1) {
           setNextLessonId(sortedLessons[currentIndex + 1].id);
         }
-        
+
         // Fetch user progress
         const progressData = await ProgressService.getUserProgress(courseId);
         setProgress(progressData);
-        
+
         // Mark lesson as viewed
         await ProgressService.updateUserProgress(courseId, lessonId);
-        
+
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Failed to load lesson. Please try again later.');
@@ -80,13 +79,13 @@ export default function LessonPage() {
         setLoading(false);
       }
     }
-    
+
     fetchData();
   }, [courseId, lessonId]);
 
   const handleCompleteLesson = async () => {
     if (!courseId || !lessonId) return;
-    
+
     try {
       const updatedProgress = await ProgressService.updateUserProgress(courseId, lessonId);
       setProgress(updatedProgress);
@@ -138,7 +137,7 @@ export default function LessonPage() {
         </Link>
       </div>
       
-      <div className=" rounded-lg shadow-md p-6">
+      <div className="rounded-lg shadow-md p-6">
         <h1 className="text-2xl font-bold">{lesson.title}</h1>
         <p className="text-gray-600 mt-2">{lesson.description}</p>
         

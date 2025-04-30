@@ -21,7 +21,7 @@ export function ContentRenderer({ contentBlock }: ContentRendererProps) {
           style={{ color: theme.colors.text.primary }}
         >
           {contentBlock.content.split('\n').map((paragraph, index) => (
-            <p key={index} style={{ color: theme.colors.text.primary }}>{paragraph}</p>
+            <p key={`paragraph-${contentBlock.id}-${index}`} style={{ color: theme.colors.text.primary }}>{paragraph}</p>
           ))}
         </motion.div>
       );
@@ -64,7 +64,7 @@ export function ContentRenderer({ contentBlock }: ContentRendererProps) {
     
     case 'quiz':
       try {
-        const quizData = JSON.parse(contentBlock.content);
+        const quizData = contentBlock.content;
         return (
           <motion.div 
             className="mb-6 p-6 rounded-lg"
@@ -75,19 +75,19 @@ export function ContentRenderer({ contentBlock }: ContentRendererProps) {
           >
             <h3 className="font-semibold mb-3" style={{ color: theme.colors.text.primary }}>{quizData.question}</h3>
             <div className="space-y-2">
-              {quizData.options.map((option: string, index: number) => (
+              {quizData.options.map((option: string, idx: number) => (
                 <motion.div 
-                  key={index} 
+                  key={`${contentBlock.id}-option-${option}-${idx}`} 
                   className="flex items-center"
                   whileHover={{ backgroundColor: theme.colors.primary[100], borderRadius: '0.25rem', padding: '0.25rem' }}
                 >
                   <input 
                     type="radio" 
-                    id={`option-${index}`} 
-                    name="quiz-answer" 
+                    id={`option-${contentBlock.id}-${idx}`} 
+                    name={`quiz-answer-${contentBlock.id}`} 
                     className="mr-2"
                   />
-                  <label htmlFor={`option-${index}`} style={{ color: theme.colors.text.primary }}>{option}</label>
+                  <label htmlFor={`option-${contentBlock.id}-${idx}`} style={{ color: theme.colors.text.primary }}>{option}</label>
                 </motion.div>
               ))}
             </div>
