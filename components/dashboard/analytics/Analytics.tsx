@@ -70,7 +70,7 @@ export default function Analytics() {
               label
             >
               {winLossData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                <Cell key={`cell-${index}`} fill={COLORS[entry.name === "Wins" ? 0 : 1]} />
               ))}
             </Pie>
             <Tooltip />

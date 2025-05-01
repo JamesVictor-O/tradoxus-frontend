@@ -20,6 +20,8 @@ export default function TradeEntryForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  
+
   const form = useForm<TradeEntry>({
     resolver: zodResolver(tradeEntrySchema),
     defaultValues: {
@@ -29,7 +31,7 @@ export default function TradeEntryForm() {
       entryPrice: 0,
       exitPrice: 0,
       notes: "",
-      tags: "",
+      tags: [],
     },
   });
 
@@ -51,9 +53,16 @@ export default function TradeEntryForm() {
       setSuccessMessage("Trade saved successfully!");
       setErrorMessage("");
       form.reset(); // Clear form
-    } catch (error: any) {
+    } catch (error) {
       console.error("❌ Error submitting trade:", error);
-      setErrorMessage("Failed to save trade.");
+      let errorMessage = "Failed to save trade.";
+      // Extract more specific error information if available
+      if (error instanceof Error) {
+        errorMessage += ` ${error.message}`;
+      } else if (typeof error === "string") {
+        errorMessage += ` ${error}`;
+      }
+      setErrorMessage(errorMessage);
       setSuccessMessage("");
     }
   };
@@ -61,8 +70,8 @@ export default function TradeEntryForm() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-6 max-w-md">
       {successMessage && <p className="text-green-600">{successMessage}</p>}
-      {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-
+      {errorMessage && <p className="text-red-600">{errorMessage}</p>}     
+      
       <div>
         <Label htmlFor="ticker">Ticker</Label>
         <Input {...form.register("ticker")} placeholder="e.g. AAPL" />

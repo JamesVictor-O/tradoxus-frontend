@@ -18,5 +18,18 @@
     "exitPrice": 3455,
     "notes": "",
     "tags": ""
+  },
+  {
+    "id": 1746085136357,
+    "ticker": "AAPL",
+    "date": "2025-05-04",
+    "direction": "long",
+    "entryPrice": 67,
+    "exitPrice": 678,
+    "notes": "",
+    "tags": [
+      "breakout",
+      "earnings"
+    ]
   }
 ]
