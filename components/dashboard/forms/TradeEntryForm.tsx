@@ -83,7 +83,6 @@ export default function TradeEntryForm() {
       </div>
 
       <div>
-        <Label htmlFor="direction">Direction</Label><div>
         <Label htmlFor="direction">Direction</Label>
         <Select
           defaultValue={form.getValues("direction")}
@@ -97,9 +96,6 @@ export default function TradeEntryForm() {
             <SelectItem value="short">Short</SelectItem>
           </SelectContent>
         </Select>
-      </div>
-
-        
       </div>
 
       <div>
