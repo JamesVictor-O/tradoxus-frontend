@@ -83,8 +83,12 @@ export default function TradeEntryForm() {
       </div>
 
       <div>
+        <Label htmlFor="direction">Direction</Label><div>
         <Label htmlFor="direction">Direction</Label>
-        <Select onValueChange={(val: "long" | "short") => form.setValue("direction", val)}>
+        <Select
+          defaultValue={form.getValues("direction")}
+          onValueChange={(val: "long" | "short") => form.setValue("direction", val)}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select direction" />
           </SelectTrigger>
@@ -93,6 +97,9 @@ export default function TradeEntryForm() {
             <SelectItem value="short">Short</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+        
       </div>
 
       <div>
