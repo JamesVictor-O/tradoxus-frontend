@@ -85,6 +85,7 @@ export default function TradeEntryForm() {
       <div>
         <Label htmlFor="direction">Direction</Label>
         <Select
+          id="direction"
           defaultValue={form.getValues("direction")}
           onValueChange={(val: "long" | "short") => form.setValue("direction", val)}
         >
