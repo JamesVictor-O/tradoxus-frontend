@@ -14,6 +14,7 @@ const navLinks = [
 	{ name: "Web3", path: "/web3" },
 	{ name: "Dashboard", path: "/dashboard" },
 	{ name: "Profile", path: "/tradingdemo" },
+  { name: "Journal", path: "/journal" },
 ];
 
 
@@ -37,6 +38,7 @@ const navigationStructure = [
       { name: "Solution", path: "/solution" },
       { name: "Benefits", path: "/benefits" },
       { name: "Gamification", path: "/gamification" },
+      { name: "Journal", path: "/journal" },
     ],
   },
   { name: "Web3", path: "/web3", dropdown: false },

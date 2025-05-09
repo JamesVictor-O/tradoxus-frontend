@@ -1,0 +1,45 @@
+[
+  {
+    "id": 1745997456253,
+    "ticker": "AAPL",
+    "date": "2025-03-31",
+    "direction": "long",
+    "entryPrice": 33,
+    "exitPrice": 34,
+    "notes": "",
+    "tags": ""
+  },
+  {
+    "id": 1745997708982,
+    "ticker": "AAPL",
+    "date": "2025-04-23",
+    "direction": "long",
+    "entryPrice": 345,
+    "exitPrice": 3455,
+    "notes": "",
+    "tags": ""
+  },
+  {
+    "id": 1746085136357,
+    "ticker": "AAPL",
+    "date": "2025-05-04",
+    "direction": "long",
+    "entryPrice": 67,
+    "exitPrice": 678,
+    "notes": "",
+    "tags": [
+      "breakout",
+      "earnings"
+    ]
+  },
+  {
+    "id": 1746610379864,
+    "ticker": "AAPL",
+    "date": "2023-03-04",
+    "direction": "long",
+    "entryPrice": 3,
+    "exitPrice": 33,
+    "notes": "",
+    "tags": []
+  }
+]
