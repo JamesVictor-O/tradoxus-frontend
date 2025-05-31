@@ -57,9 +57,7 @@ export function LearningPathCard({
       <CardHeader className="space-y-2 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Icon className={`
-              ${difficultyIconColors[difficulty]}
-              `} />
+            <Icon className={difficultyIconColors[difficulty]} />
           </div>
           <span
             className={cn(
@@ -73,19 +71,19 @@ export function LearningPathCard({
         <CardTitle className="text-xl font-medium text-white">{title}</CardTitle>
         <p className="text-sm text-gray-400 h-10 w-3/4">{description}</p>
         <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-400">Progress</span>
-              <span className="text-white font-medium">
-                {progress}/{totalModules} Modules
-              </span>
-            </div>
-            <div className="h-1.5 rounded-full bg-gray-800/50">
-              <div
-                className={`h-full rounded-full ${progressColor[difficulty]}`}
-                style={{ width: `${(progress / totalModules) * 100}%` }}
-              />
-            </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-400">Progress</span>
+            <span className="text-white font-medium">
+              {progress}/{totalModules} Modules
+            </span>
           </div>
+          <div className="h-1.5 rounded-full bg-gray-800/50">
+            <div
+              className={`h-full rounded-full ${progressColor[difficulty]}`}
+              style={{ width: `${(progress / totalModules) * 100}%` }}
+            />
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="space-y-3">

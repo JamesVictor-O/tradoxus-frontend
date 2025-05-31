@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const navLinks = [
 	{ name: "Modules", path: "/modules" },
@@ -230,6 +231,7 @@ export function Header() {
                 )}
               </div>
             ))}
+            <ThemeToggle />
           </nav>
         </div>
 
