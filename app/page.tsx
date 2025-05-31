@@ -1,16 +1,12 @@
 // components/TradoxusLanding.tsx
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Shield,
-  Gamepad2,
-  BarChart3,
-} from "lucide-react";
+import { Shield, Gamepad2, BarChart3 } from "lucide-react";
 import { useWallet } from "@/context/WalletProviderContext";
 
 const TradoxusLanding = () => {
   const [scrollY, setScrollY] = useState(0);
-  
+
   // Use the wallet context instead of local state
   const { walletAddress, isConnecting, connectWallet } = useWallet();
 
@@ -78,7 +74,10 @@ const TradoxusLanding = () => {
                 <button className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2">
                   <span>Get Started</span>
                 </button>
-                 <button className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2">
+                <button
+                  type="button"
+                  className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2"
+                >
                   <span>Explore Features</span>
                 </button>
               </>
@@ -89,9 +88,14 @@ const TradoxusLanding = () => {
                   disabled={isConnecting}
                   className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+                  <span>
+                    {isConnecting ? "Connecting..." : "Connect Wallet"}
+                  </span>
                 </button>
-                <button className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2">
+                <button
+                  type="button"
+                  className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2"
+                >
                   <span>Explore Features</span>
                 </button>
               </>
@@ -145,12 +149,16 @@ const TradoxusLanding = () => {
               Join thousands of traders who have mastered crypto trading in our
               safe, gamified environment.
             </p>
-            <button 
+            <button
               onClick={walletAddress ? undefined : connectWallet}
               disabled={isConnecting}
               className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-12 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 disabled:opacity-50"
             >
-              {walletAddress ? "Start Learning Today" : (isConnecting ? "Connecting..." : "Connect Wallet to Start")}
+              {walletAddress
+                ? "Start Learning Today"
+                : isConnecting
+                ? "Connecting..."
+                : "Connect Wallet to Start"}
             </button>
           </div>
         </div>
@@ -166,15 +174,26 @@ const TradoxusLanding = () => {
             Master crypto trading safely through gamified education
           </p>
           <div className="flex justify-center space-x-8 text-slate-400">
-            <a href="#" className="hover:text-cyan-400 transition-colors">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-cyan-400 transition-colors">
-              Terms
-            </a>
-            <a href="#" className="hover:text-cyan-400 transition-colors">
-              Support
-            </a>
+            <button
+              type="button"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              + Privacy +{" "}
+            </button>
+            +{" "}
+            <button
+              type="button"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              + Terms +{" "}
+            </button>
+            +{" "}
+            <button
+              type="button"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              + Support +{" "}
+            </button>
           </div>
         </div>
       </footer>
