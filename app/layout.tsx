@@ -4,6 +4,7 @@ import "./globals.css";
 import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { WalletProvider } from "@/context/WalletProviderContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,13 +31,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
-          <div className="min-h-[calc(100vh-85px)]">
-            <Header />
-            {children}
-          </div>
-          <Footer />
-        </ThemeProvider>
+        <WalletProvider>
+          <ThemeProvider>
+            <div className="min-h-[calc(100vh-85px)]">
+              <Header />
+              {children}
+            </div>
+            <Footer />
+          </ThemeProvider>
+        </WalletProvider>
       </body>
     </html>
   );

@@ -1,77 +1,24 @@
+// components/TradoxusLanding.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import {
   Shield,
   Gamepad2,
   BarChart3,
-  Menu,
-  X,
-  ChevronRight,
-  Zap,
-  Users,
-  Award,
 } from "lucide-react";
-import {
-  StellarWalletsKit,
-  WalletNetwork,
-  allowAllModules,
-  XBULL_ID,
-  ISupportedWallet,
-} from "@creit.tech/stellar-wallets-kit";
+import { useWallet } from "@/context/WalletProviderContext";
 
 const TradoxusLanding = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
-  const kit = new StellarWalletsKit({
-    network: WalletNetwork.TESTNET, 
-    selectedWalletId: XBULL_ID,
-    modules: allowAllModules(), 
-  });
-
-
-  const connectWallet = async () => {
-    try {
-      await kit.openModal({
-        onWalletSelected: async (option: ISupportedWallet) => {
-          // Set the selected wallet
-          await kit.setWallet(option.id);
-          // Get the public key
-          const { address } = await kit.getAddress();
-          setWalletAddress(address);
-          console.log("Connected wallet address:", address);
-        },
-        onClosed: (err?: Error) => {
-          if (err) {
-            console.error("Modal closed with error:", err);
-          }
-        },
-        modalTitle: "Connect Your Stellar Wallet",
-        notAvailableText: "Selected wallet is not available",
-      });
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-    }
-  };
-
+  
+  // Use the wallet context instead of local state
+  const { walletAddress, isConnecting, connectWallet } = useWallet();
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-//   const navItems = [
-//     "Modules",
-//     "Problem",
-//     "Solution",
-//     "Benefits",
-//     "Gamification",
-//     "Web3",
-//     "Dashboard",
-//     "Profile",
-//   ];
 
   const features = [
     {
@@ -97,11 +44,8 @@ const TradoxusLanding = () => {
     },
   ];
 
-
-
   return (
-     <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
-     
+    <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -112,8 +56,6 @@ const TradoxusLanding = () => {
       {/* Hero Section */}
       <section className="relative z-10 pt-32 pb-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
-
-
           <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
             <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
               Master Crypto Trading
@@ -131,34 +73,36 @@ const TradoxusLanding = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={connectWallet}
-              className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2"
-            >
-              <span>
-                {walletAddress
-                  ? `Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-                  : "Connect Wallet"}
-              </span>
-            </button>
-            <button className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2">
-              <span>Explore Features</span>
-            </button>
+            {walletAddress ? (
+              <>
+                <button className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2">
+                  <span>Get Started</span>
+                </button>
+                 <button className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2">
+                  <span>Explore Features</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={connectWallet}
+                  disabled={isConnecting}
+                  className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+                </button>
+                <button className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2">
+                  <span>Explore Features</span>
+                </button>
+              </>
+            )}
           </div>
-
-          {/* Display connected wallet address (optional) */}
-          {walletAddress && (
-            <p className="text-slate-400 mt-4">
-              Connected Address: {walletAddress}
-            </p>
-          )}
         </div>
       </section>
 
       {/* Features Section */}
       <section className="relative z-10 py-20 px-6">
         <div className="max-w-7xl mx-auto">
-
           <div className="grid lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div
@@ -201,8 +145,12 @@ const TradoxusLanding = () => {
               Join thousands of traders who have mastered crypto trading in our
               safe, gamified environment.
             </p>
-            <button className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-12 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25">
-              Start Learning Today
+            <button 
+              onClick={walletAddress ? undefined : connectWallet}
+              disabled={isConnecting}
+              className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-12 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 disabled:opacity-50"
+            >
+              {walletAddress ? "Start Learning Today" : (isConnecting ? "Connecting..." : "Connect Wallet to Start")}
             </button>
           </div>
         </div>
