@@ -292,6 +292,11 @@ export function Header() {
                   )}
                 </div>
               ))}
+              <div className="py-1">
+                <div className="py-3 px-4">
+                  <ThemeToggle />
+                </div>
+              </div>
             </nav>
           </div>
         )}
