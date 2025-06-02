@@ -5,12 +5,12 @@ import { ChallengeCard } from "@/components/dashboard/challenge-card";
 
 export function ChallengesTab() {
 	return (
-		<Card className="bg-gray-900 border-gray-800">
-			<CardHeader className="border-b border-gray-800">
-				<CardTitle className="text-xl font-semibold text-white">
+		<Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+			<CardHeader className="border-b border-gray-200 dark:border-gray-800">
+				<CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
 					Upcoming Challenges
 				</CardTitle>
-				<p className="text-sm text-gray-400">Test your skills and earn rewards</p>
+				<p className="text-sm text-gray-600 dark:text-gray-400">Test your skills and earn rewards</p>
 			</CardHeader>
 			<CardContent className="p-4 space-y-4">
 				<ChallengeCard

@@ -38,7 +38,7 @@ export function FeaturedModuleCard({
 
   return (
     <Link href={`/modules/${slug}`} className="block">
-      <Card className="bg-gray-900/50 border-gray-800/50 hover:border-gray-700/50 transition-colors h-full cursor-pointer">
+      <Card className="bg-white dark:bg-gray-900/50 border-gray-200 dark:border-gray-800/50 hover:border-gray-300 dark:hover:border-gray-700/50 transition-colors h-full cursor-pointer">
         <CardHeader className="flex flex-col pb-3 gap-6">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
@@ -50,26 +50,26 @@ export function FeaturedModuleCard({
               >
                 {difficulty}
               </span>
-              <div className="flex items-center gap-1.5 text-gray-400">
+              <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
                 <Clock className="h-4 w-4" />
                 <span>{duration}</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <h3 className="text-xl font-medium text-white w-3/4 h-10">{title}</h3>
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white w-3/4 h-10">{title}</h3>
             </div>
           </div>
-          <p className="text-sm text-gray-400 line-clamp-2">{description}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{description}</p>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between text-sm border-t border-gray-800/50 pt-4">
+          <div className="flex items-center justify-between text-sm border-t border-gray-200 dark:border-gray-800/50 pt-4">
             <div className="flex items-center gap-4">
               <div className="flex -space-x-2">
                 {instructors.map((instructor, index) => (
                   <div
                     key={index}
                     className={cn(
-                      "h-7 w-7 rounded-full flex items-center justify-center text-xs font-medium text-white ring-2 ring-gray-900/50",
+                      "h-7 w-7 rounded-full flex items-center justify-center text-xs font-medium text-white ring-2 ring-white dark:ring-gray-900/50",
                       instructor.color
                     )}
                   >
@@ -77,13 +77,13 @@ export function FeaturedModuleCard({
                   </div>
                 ))}
               </div>
-              <div className="flex items-center gap-1.5 text-gray-400">
+              <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
                 <Users className="h-4 w-4" />
                 <span>{enrollmentCount.toLocaleString()}</span>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 text-white">
-              <Award className="h-4 w-4 text-amber-400" />
+            <div className="flex items-center gap-1.5 text-gray-900 dark:text-white">
+              <Award className="h-4 w-4 text-amber-500 dark:text-amber-400" />
               <span>{rating.toFixed(1)}</span>
             </div>
           </div>

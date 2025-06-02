@@ -4,15 +4,15 @@ import { benefits, features } from "@/lib/constants/web3";
 
 export default function Web3Integration() {
 	return (
-		<main>
+		<main className="bg-white dark:bg-gray-900 transition-colors duration-200">
 			{/* Section 1: Web3 Integration in Tradoxus */}
 			<section className="py-16">
 				<div className="container mx-auto px-4">
 					<div className="max-w-3xl mx-auto mb-12 text-center">
-						<h2 className="text-4xl font-bold mb-4">
+						<h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">
 							Web3 Integration in Tradoxus
 						</h2>
-						<p className="text-gray-400 text-lg">
+						<p className="text-gray-600 dark:text-gray-400 text-lg">
 							Tradoxus leverages Web3 technologies to provide a cutting-edge
 							learning experience that goes beyond traditional educational
 							platforms. Our Web3 integration offers unique advantages that
@@ -29,13 +29,13 @@ export default function Web3Integration() {
 			</section>
 
 			{/* Section 2: Why Web3 Matters in Crypto Education */}
-			<section className="py-16 bg-gray-900">
+			<section className="py-16 bg-gray-50 dark:bg-gray-800">
 				<div className="container mx-auto px-4">
 					<div className="max-w-3xl mx-auto mb-10 text-center">
-						<h2 className="text-3xl font-bold mb-4">
+						<h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
 							Why Web3 Matters in Crypto Education
 						</h2>
-						<p className="text-gray-400">
+						<p className="text-gray-600 dark:text-gray-400">
 							Integrating Web3 technologies into our educational platform
 							provides several key benefits.
 						</p>

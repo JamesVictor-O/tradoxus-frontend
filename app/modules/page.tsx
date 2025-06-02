@@ -113,11 +113,11 @@ const featuredModules = [
 
 export default function EducationPage() {
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <div className="container max-w-7xl mx-auto px-4 py-12">
         <div className="space-y-8">
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-white">Learning Paths</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Learning Paths</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -128,10 +128,10 @@ export default function EducationPage() {
 
           <div className="pt-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Featured Modules</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Featured Modules</h2>
               <a
                 href="/education/modules"
-                className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm font-medium"
+                className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium"
               >
                 View all modules
                 <ChevronRight className="h-4 w-4" />

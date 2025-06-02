@@ -14,7 +14,7 @@ export function ThemeToggle() {
           const nextTheme = theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
           setTheme(nextTheme);
         }}
-        className="text-gray-300 hover:text-white transition-colors"
+        className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
         aria-label={`Switch to ${theme === "light" ? "dark" : theme === "dark" ? "system" : "light"} theme`}
       >
         {theme === "dark" ? (

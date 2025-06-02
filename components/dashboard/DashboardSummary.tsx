@@ -16,35 +16,35 @@ export default function DashboardSummary() {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
           <CardContent className="p-4">
-            <h3 className="text-lg font-semibold">Total Trades</h3>
-            <p className="text-2xl mt-2">42</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Total Trades</h3>
+            <p className="text-2xl mt-2 text-gray-900 dark:text-white">42</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
           <CardContent className="p-4">
-            <h3 className="text-lg font-semibold">Win Rate</h3>
-            <p className="text-2xl mt-2">67%</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Win Rate</h3>
+            <p className="text-2xl mt-2 text-gray-900 dark:text-white">67%</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
           <CardContent className="p-4">
-            <h3 className="text-lg font-semibold">Net PnL</h3>
-            <p className="text-2xl mt-2 text-green-600">+$1,250</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Net PnL</h3>
+            <p className="text-2xl mt-2 text-green-600 dark:text-green-400">+$1,250</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Placeholder Chart */}
-      <div className="bg-white p-4 rounded-xl shadow">
-        <h3 className="text-lg font-semibold mb-4">PnL Over Time</h3>
+      <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow border border-gray-200 dark:border-gray-800">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">PnL Over Time</h3>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={data}>
-            <XAxis dataKey="date" />
-            <YAxis />
+            <XAxis dataKey="date" stroke="#888" />
+            <YAxis stroke="#888" />
             <Tooltip />
             <Area type="monotone" dataKey="pnl" stroke="#10b981" fill="#d1fae5" />
           </AreaChart>

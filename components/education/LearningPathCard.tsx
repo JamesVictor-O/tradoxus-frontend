@@ -53,7 +53,7 @@ export function LearningPathCard({
   };
 
   return (
-    <Card className="bg-gray-900/50 border-gray-800/50 hover:border-gray-700/50 transition-colors h-full flex flex-col">
+    <Card className="bg-white dark:bg-gray-900/50 border-gray-200 dark:border-gray-800/50 hover:border-gray-300 dark:hover:border-gray-700/50 transition-colors h-full flex flex-col">
       <CardHeader className="space-y-2 pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -68,16 +68,16 @@ export function LearningPathCard({
             {difficulty}
           </span>
         </div>
-        <CardTitle className="text-xl font-medium text-white">{title}</CardTitle>
-        <p className="text-sm text-gray-400 h-10 w-3/4">{description}</p>
+        <CardTitle className="text-xl font-medium text-gray-900 dark:text-white">{title}</CardTitle>
+        <p className="text-sm text-gray-600 dark:text-gray-400 h-10 w-3/4">{description}</p>
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Progress</span>
-            <span className="text-white font-medium">
+            <span className="text-gray-600 dark:text-gray-400">Progress</span>
+            <span className="text-gray-900 dark:text-white font-medium">
               {progress}/{totalModules} Modules
             </span>
           </div>
-          <div className="h-1.5 rounded-full bg-gray-800/50">
+          <div className="h-1.5 rounded-full bg-gray-100 dark:bg-gray-800/50">
             <div
               className={`h-full rounded-full ${progressColor[difficulty]}`}
               style={{ width: `${(progress / totalModules) * 100}%` }}
@@ -90,15 +90,15 @@ export function LearningPathCard({
           {modules.map((module, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 text-sm text-gray-300"
+              className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300"
             >
               {module.completed ? (
-                <div className="flex items-center justify-center h-5 w-5 rounded-full border border-green-900/50 bg-green-900/50 flex-shrink-0 text-xs font-medium">
-                  <Check className="h-4 w-3 text-green-300 flex-shrink-0" />
+                <div className="flex items-center justify-center h-5 w-5 rounded-full border border-green-500/50 bg-green-500/10 dark:border-green-900/50 dark:bg-green-900/50 flex-shrink-0 text-xs font-medium">
+                  <Check className="h-4 w-3 text-green-600 dark:text-green-300 flex-shrink-0" />
                 </div>
               ) : (
                 <div
-                  className="flex items-center justify-center h-5 w-5 rounded-full border border-gray-700 bg-gray-800/50 flex-shrink-0 text-xs font-medium"
+                  className="flex items-center justify-center h-5 w-5 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 flex-shrink-0 text-xs font-medium text-gray-600 dark:text-gray-400"
                 >
                   {index + 1}
                 </div>
@@ -108,14 +108,14 @@ export function LearningPathCard({
           ))}
         </div>
       </CardContent>
-      <CardFooter className="pt-4 border-t border-gray-800/50">
+      <CardFooter className="pt-4 border-t border-gray-200 dark:border-gray-800/50">
         <div className="w-full space-y-4">
           <button
             className={cn(
               "w-full py-2.5 px-4 rounded-lg font-medium transition-colors text-sm",
               isActive
                 ? buttonColor[difficulty]
-                : "bg-gray-800/50 hover:bg-gray-700/50 text-white"
+                : "bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/50 text-gray-900 dark:text-white"
             )}
           >
             {isActive ? "Continue Learning" : "Start Path"}
