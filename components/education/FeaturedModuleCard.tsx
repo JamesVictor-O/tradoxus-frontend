@@ -67,7 +67,7 @@ export function FeaturedModuleCard({
               <div className="flex -space-x-2">
                 {instructors.map((instructor, index) => (
                   <div
-                    key={index}
+                    key={`${instructor.initials}-${instructor.color}-${index}`}
                     className={cn(
                       "h-7 w-7 rounded-full flex items-center justify-center text-xs font-medium text-white ring-2 ring-white dark:ring-gray-900/50",
                       instructor.color

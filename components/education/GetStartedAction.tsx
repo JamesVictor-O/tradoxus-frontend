@@ -11,6 +11,7 @@ export const GetStartedAction = () => {
       </p>
       <div>
         <button
+          type="button"
           className="bg-[#1D4ED8] hover:bg-[#1E40AF] text-white font-medium px-8 py-3 rounded-lg text-base transition-colors"
         >
           Get Started Today

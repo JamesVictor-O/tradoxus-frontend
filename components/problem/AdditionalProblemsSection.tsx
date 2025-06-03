@@ -7,7 +7,7 @@ const AdditionalProblems = () => {
         <section className="">
             <div className="grid grid-cols-1 gap-4">
                 {solutionData.data.map((item, index) => (
-                    <div key={index} className="flex gap-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white p-6 rounded-lg">
+                    <div key={item.title || `solution-${index}`} className="flex gap-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white p-6 rounded-lg">
                         <div className="flex items-center justify-center bg-red-100 dark:bg-red-500/10 p-2 max-w-8 max-h-8 rounded-sm">
                             {item.icon}
                         </div>

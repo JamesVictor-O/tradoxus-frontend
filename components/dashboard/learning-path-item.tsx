@@ -79,8 +79,8 @@ export function LearningPathItem({
 
 			{expanded && (
 				<div className="mt-4 space-y-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-3">
-					{modules.map((module, index) => (
-						<div key={index} className="flex items-center justify-between">
+					{modules.map((module) => (
+						<div key={module.name} className="flex items-center justify-between">
 							<div className="flex items-center gap-2">
 								{module.completed ? (
 									<CheckCircle className="h-4 w-4 text-green-500" />
@@ -100,7 +100,7 @@ export function LearningPathItem({
 									Completed
 								</span>
 							) : (
-								<button className="px-2 py-0.5 text-xs rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white transition-colors">
+								<button type="button" className="px-2 py-0.5 text-xs rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white transition-colors">
 									Start
 								</button>
 							)}

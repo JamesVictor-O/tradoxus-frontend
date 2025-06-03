@@ -15,7 +15,7 @@ const ImpactSection: React.FC = () => {
             </div>
             <div className="grid gap-6">
                 {impactData.data.map((item, index) => (
-                    <div key={index} className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+                    <div key={item.title || `impact-${index}`} className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-red-500 mb-2">{item.title}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
                     </div>
