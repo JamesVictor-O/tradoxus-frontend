@@ -89,8 +89,8 @@ export default function Analytics() {
               dataKey="value"
               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             >
-              {winLossData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[entry.name === "Wins" ? 0 : 1]} />
+              {winLossData.map((entry) => (
+                <Cell key={entry.name} fill={COLORS[entry.name === "Wins" ? 0 : 1]} />
               ))}
             </Pie>
             <Tooltip 
