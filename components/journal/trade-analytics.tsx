@@ -4,9 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { mistakes, mockDashboardMetrics, mockTrades, strategies } from '@/lib/mock-data';
 import { formatCurrency } from '@/lib/utils';
+import { Trade } from '@/lib/types/journal';
 
 interface analyticsProps {
-    trades: typeof mockTrades;
+    trades: Trade[];
+}
+
+interface MonthlyPnL {
+    month: string;
+    pnl: number;
+    trades: number;
 }
 
 export const TradeAnalytics = ({ trades }: analyticsProps) => {
@@ -34,7 +41,7 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
         };
     }).filter(item => item.count > 0);
 
-    const monthlyPnL = trades.reduce((acc: any[], trade) => {
+    const monthlyPnL = trades.reduce((acc: MonthlyPnL[], trade) => {
         const month = new Date(trade.entryDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
         const existing = acc.find(item => item.month === month);
         if (existing) {
@@ -45,6 +52,21 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
         }
         return acc;
     }, []);
+
+    const winningTrades = trades.filter(t => t.pnl > 0);
+    const losingTrades = trades.filter(t => t.pnl < 0);
+    const avgWinningTrade = winningTrades.length > 0
+        ? winningTrades.reduce((sum, t) => sum + t.pnl, 0) / winningTrades.length
+        : 0;
+    const avgLosingTrade = losingTrades.length > 0
+        ? losingTrades.reduce((sum, t) => sum + t.pnl, 0) / losingTrades.length
+        : 0;
+    const totalPnL = trades.reduce((sum, t) => sum + t.pnl, 0);
+    const winRate = trades.length > 0 ? (winningTrades.length / trades.length) * 100 : 0;
+
+    const totalWins = winningTrades.reduce((sum, t) => sum + t.pnl, 0);
+    const totalLosses = Math.abs(losingTrades.reduce((sum, t) => sum + t.pnl, 0));
+    const profitFactor = totalLosses > 0 ? totalWins / totalLosses : totalWins > 0 ? Infinity : 0;
 
     const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
 
@@ -88,7 +110,7 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                                     dataKey="winRate"
                                 >
                                     {strategyPerformance.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        <Cell key={`cell-${entry.strategy}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
                                 <Tooltip />
@@ -112,8 +134,8 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                                 <YAxis />
                                 <Tooltip formatter={(value) => [formatCurrency(Number(value)), 'P&L']} />
                                 <Bar dataKey="pnl" fill="#10b981">
-                                    {monthlyPnL.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.pnl >= 0 ? '#10b981' : '#ef4444'} />
+                                    {monthlyPnL.map((entry) => (
+                                        <Cell key={`cell-${entry.month}`} fill={entry.pnl >= 0 ? '#10b981' : '#ef4444'} />
                                     ))}
                                 </Bar>
                             </BarChart>
@@ -128,7 +150,7 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            {mistakeAnalysis.map((item, index) => (
+                            {mistakeAnalysis.map((item) => (
                                 <div key={item.mistake} className="flex items-center justify-between p-3 border rounded-lg">
                                     <div>
                                         <div className="font-medium">{item.mistake}</div>
@@ -163,7 +185,7 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Avg:</span>
-                                    <span className="text-green-600">{formatCurrency(mockDashboardMetrics.avgWinningTrade)}</span>
+                                    <span className="text-green-600">{formatCurrency(avgWinningTrade)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Total:</span>
@@ -180,7 +202,7 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Avg:</span>
-                                    <span className="text-red-600">{formatCurrency(mockDashboardMetrics.avgLosingTrade)}</span>
+                                    <span className="text-red-600">{formatCurrency(avgLosingTrade)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Total:</span>
@@ -193,15 +215,15 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                             <div className="space-y-1">
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Profit Factor:</span>
-                                    <span>{mockDashboardMetrics.profitFactor}</span>
+                                    <span>{profitFactor}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Win Rate:</span>
-                                    <span>{mockDashboardMetrics.winRate}%</span>
+                                    <span>{winRate}%</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Avg Trade:</span>
-                                    <span>{formatCurrency(mockDashboardMetrics.totalPnL / mockDashboardMetrics.totalTrades)}</span>
+                                    <span>{formatCurrency(totalPnL / mockDashboardMetrics.totalTrades)}</span>
                                 </div>
                             </div>
                         </div>

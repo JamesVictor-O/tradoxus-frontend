@@ -15,7 +15,11 @@ export const formatCurrency = (value: number) => {
 };
 
 export const formatDate = (dateString: string) => {
-	return new Date(dateString).toLocaleDateString('en-US', {
+	const date = new Date(dateString);
+	if (isNaN(date.getTime())) {
+		throw new Error(`Invalid date string: ${dateString}`);
+	}
+	return date.toLocaleDateString('en-US', {
 		year: 'numeric',
 		month: 'short',
 		day: 'numeric'
@@ -23,7 +27,11 @@ export const formatDate = (dateString: string) => {
 };
 
 export const formatDateTime = (dateString: string) => {
-	return new Date(dateString).toLocaleString('en-US', {
+	const date = new Date(dateString);
+	if (isNaN(date.getTime())) {
+		throw new Error(`Invalid date string: ${dateString}`);
+	}
+	return date.toLocaleString('en-US', {
 		year: 'numeric',
 		month: 'short',
 		day: 'numeric',

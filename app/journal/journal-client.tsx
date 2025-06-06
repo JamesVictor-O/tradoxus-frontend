@@ -22,7 +22,7 @@ export const TradingJournal: React.FC = () => {
     const [filterStrategy, setFilterStrategy] = useState('all');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-    const [showHidden, setShowHidden] = useState(false); 
+    const [showHidden, setShowHidden] = useState(false);
     const [recentlyEdited, setRecentlyEdited] = useState<string[]>([]);
 
     const [newTrade, setNewTrade] = useState({
@@ -55,7 +55,8 @@ export const TradingJournal: React.FC = () => {
         });
 
         filtered.sort((a, b) => {
-            let aVal: any, bVal: any;
+            let aVal: string | number | Date;
+            let bVal: string | number | Date;
             switch (sortBy) {
                 case 'date':
                     aVal = new Date(a.entryDate);
@@ -76,9 +77,8 @@ export const TradingJournal: React.FC = () => {
 
             if (sortOrder === 'asc') {
                 return aVal > bVal ? 1 : -1;
-            } else {
-                return aVal < bVal ? 1 : -1;
             }
+            return aVal < bVal ? 1 : -1;
         });
 
         setFilteredTrades(filtered);
@@ -86,12 +86,12 @@ export const TradingJournal: React.FC = () => {
 
     const validateTradeForm = (trade: typeof newTrade) => {
         if (!trade.symbol) return "Symbol is required";
-        if (!trade.entryPrice || isNaN(parseFloat(trade.entryPrice))) return "Valid entry price is required";
-        if (!trade.exitPrice || isNaN(parseFloat(trade.exitPrice))) return "Valid exit price is required";
-        if (!trade.quantity || isNaN(parseFloat(trade.quantity))) return "Valid quantity is required";
+        if (!trade.entryPrice || Number.isNaN(Number.parseFloat(trade.entryPrice))) return "Valid entry price is required";
+        if (!trade.exitPrice || Number.isNaN(Number.parseFloat(trade.exitPrice))) return "Valid exit price is required";
+        if (!trade.quantity || Number.isNaN(Number.parseFloat(trade.quantity))) return "Valid quantity is required";
         if (!trade.entryDate) return "Entry date is required";
         if (!trade.exitDate) return "Exit date is required";
-        if (!trade.commission || isNaN(parseFloat(trade.commission))) return "Valid commission is required";
+        if (!trade.commission || Number.isNaN(Number.parseFloat(trade.commission))) return "Valid commission is required";
         return null;
     };
 
