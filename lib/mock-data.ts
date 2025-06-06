@@ -1,3 +1,5 @@
+import { DashboardMetrics, Trade } from "./types/journal";
+
 export interface Course {
   id: string;
   title: string;
@@ -157,3 +159,84 @@ export const getMockRecentActivities = (): Activity[] => {
     },
   ];
 };
+
+
+
+// Mock data
+export const mockTrades: Trade[] = [
+  {
+    id: '1',
+    symbol: 'AAPL',
+    side: 'Long',
+    entryPrice: 150.00,
+    exitPrice: 155.50,
+    quantity: 100,
+    entryDate: '2024-01-15T09:30:00',
+    exitDate: '2024-01-15T15:30:00',
+    commission: 2.50,
+    strategy: ['Breakout', 'Momentum'],
+    preTradeNotes: 'Strong support level, expecting breakout',
+    postTradeNotes: 'Trade executed well, took profit at resistance',
+    mistakes: [],
+    screenshots: ['chart1.png'],
+    pnl: 547.50,
+    duration: 6,
+    isHidden: false
+  },
+  {
+    id: '2',
+    symbol: 'TSLA',
+    side: 'Short',
+    entryPrice: 245.00,
+    exitPrice: 250.00,
+    quantity: 50,
+    entryDate: '2024-01-16T10:00:00',
+    exitDate: '2024-01-16T14:00:00',
+    commission: 2.00,
+    strategy: ['Reversal', 'Overextended'],
+    preTradeNotes: 'Stock looks overextended, RSI overbought',
+    postTradeNotes: 'Should have waited for better entry',
+    mistakes: ['Early Entry', 'FOMO'],
+    screenshots: ['chart2.png'],
+    pnl: -252.00,
+    duration: 4,
+    isHidden: false
+  },
+  {
+    id: '3',
+    symbol: 'MSFT',
+    side: 'Long',
+    entryPrice: 380.00,
+    exitPrice: 385.25,
+    quantity: 75,
+    entryDate: '2024-01-17T11:15:00',
+    exitDate: '2024-01-17T16:00:00',
+    commission: 1.75,
+    strategy: ['Support Bounce', 'Tech Strength'],
+    preTradeNotes: 'Bouncing off key support, tech sector looking strong',
+    postTradeNotes: 'Perfect execution, hit target exactly',
+    mistakes: [],
+    screenshots: ['chart3.png'],
+    pnl: 392.00,
+    duration: 5,
+    isHidden: false
+  }
+];
+
+export const mockDashboardMetrics: DashboardMetrics = {
+  totalPnL: 687.50,
+  winRate: 66.67,
+  avgWinningTrade: 469.75,
+  avgLosingTrade: -252.00,
+  profitFactor: 1.86,
+  totalTrades: 3,
+  equityCurve: [
+    { date: '2024-01-15', value: 10000 },
+    { date: '2024-01-16', value: 10547.50 },
+    { date: '2024-01-17', value: 10295.50 },
+    { date: '2024-01-18', value: 10687.50 }
+  ]
+};
+
+export const strategies = ['Breakout', 'Reversal', 'Momentum', 'Support Bounce', 'Resistance Rejection', 'Gap Fill', 'Earnings Play', 'Technical Pattern'];
+export const mistakes = ['Early Entry', 'Late Exit', 'FOMO', 'Revenge Trading', 'Position Size Too Large', 'Ignored Stop Loss', 'Overconfidence'];
