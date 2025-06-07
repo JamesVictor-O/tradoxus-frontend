@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { mistakes, mockDashboardMetrics, mockTrades, strategies } from '@/lib/mock-data';
+import { mistakes, strategies } from '@/lib/mock-data';
 import { formatCurrency } from '@/lib/utils';
 import { Trade } from '@/lib/types/journal';
 
@@ -219,11 +219,11 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Win Rate:</span>
-                                    <span>{winRate}%</span>
+                                    <span>{winRate.toFixed(2)}%</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-sm text-gray-600">Avg Trade:</span>
-                                    <span>{formatCurrency(totalPnL / mockDashboardMetrics.totalTrades)}</span>
+                                      <span>{formatCurrency(trades.length > 0 ? totalPnL / trades.length : 0)}</span>
                                 </div>
                             </div>
                         </div>

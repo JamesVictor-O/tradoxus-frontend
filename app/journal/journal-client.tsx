@@ -102,7 +102,7 @@ export const TradingJournal: React.FC = () => {
             return;
         }
 
-        const pnl = (parseFloat(newTrade.exitPrice) - parseFloat(newTrade.entryPrice)) * parseFloat(newTrade.quantity) * (newTrade.side === 'Long' ? 1 : -1) - parseFloat(newTrade.commission);
+        const pnl = (Number.parseFloat(newTrade.exitPrice) - Number.parseFloat(newTrade.entryPrice)) * Number.parseFloat(newTrade.quantity) * (newTrade.side === 'Long' ? 1 : -1) - Number.parseFloat(newTrade.commission);
         const entryTime = new Date(newTrade.entryDate);
         const exitTime = new Date(newTrade.exitDate);
         const duration = Math.round((exitTime.getTime() - entryTime.getTime()) / (1000 * 60 * 60));
@@ -111,12 +111,12 @@ export const TradingJournal: React.FC = () => {
             id: Date.now().toString(),
             symbol: newTrade.symbol.toUpperCase(),
             side: newTrade.side,
-            entryPrice: parseFloat(newTrade.entryPrice),
-            exitPrice: parseFloat(newTrade.exitPrice),
-            quantity: parseFloat(newTrade.quantity),
+            entryPrice: Number.parseFloat(newTrade.entryPrice),
+            exitPrice: Number.parseFloat(newTrade.exitPrice),
+            quantity: Number.parseFloat(newTrade.quantity),
             entryDate: newTrade.entryDate,
             exitDate: newTrade.exitDate,
-            commission: parseFloat(newTrade.commission),
+            commission: Number.parseFloat(newTrade.commission),
             strategy: newTrade.strategy,
             preTradeNotes: newTrade.preTradeNotes,
             postTradeNotes: newTrade.postTradeNotes,
