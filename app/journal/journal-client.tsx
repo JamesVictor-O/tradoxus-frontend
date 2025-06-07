@@ -1,9 +1,10 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrendingUp, Activity, Calendar } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { Trade } from '@/lib/types/journal';
+import type { Trade } from '@/lib/types/journal';
 import { mistakes, mockTrades, strategies } from '@/lib/mock-data';
 import { TradeListComponent } from '@/components/journal/trade-list';
 import { TradeAnalytics } from '@/components/journal/trade-analytics';
@@ -43,7 +44,7 @@ export const TradingJournal: React.FC = () => {
     const [editTrade, setEditTrade] = useState<Trade | null>(null);
 
     useEffect(() => {
-        let filtered = trades.filter(trade => {
+        const filtered = trades.filter(trade => {
             const searchLower = searchQuery.toLowerCase();
             const matchesSearch =
                 trade.symbol.toLowerCase().includes(searchLower) ||
