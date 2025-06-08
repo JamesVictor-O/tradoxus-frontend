@@ -280,7 +280,7 @@ export default function ProfileForm() {
                 )}
               />
 
-              <Button type="submit" disabled={isSubmitting}>
+              <Button variant="outline" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Saving..." : "Save changes"}
               </Button>
             </form>
