@@ -278,7 +278,7 @@ export default function SecuritySettings() {
                                 )}
                             />
 
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button variant="outline" type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? "Updating..." : "Update password"}
                             </Button>
                             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
