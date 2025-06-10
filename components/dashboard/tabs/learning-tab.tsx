@@ -3,12 +3,12 @@ import { LearningPathItem } from "@/components/dashboard/learning-path-item";
 
 export function LearningTab() {
 	return (
-		<Card className="bg-gray-900 border-gray-800">
-			<CardHeader className="border-b border-gray-800">
-				<CardTitle className="text-xl font-semibold text-white">
+		<Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+			<CardHeader className="border-b border-gray-200 dark:border-gray-800">
+				<CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
 					Your Learning Path
 				</CardTitle>
-				<p className="text-sm text-gray-400">
+				<p className="text-sm text-gray-600 dark:text-gray-400">
 					Track your progress through the curriculum
 				</p>
 			</CardHeader>

@@ -118,14 +118,14 @@ const solutionSections: {
 
 export default function SolutionPage() {
   return (
-    <main className="container mx-auto min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <main className="container mx-auto min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-8">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-8">
             The Tradoxus Solution
           </h1>
-          <p className="text-gray-400 max-w-3xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Tradoxus solves the critical problems in crypto trading education
             through a gamified educational web-app that provides safe, practical
             learning experiences.

@@ -7,7 +7,7 @@ export function DashboardHeader() {
 	return (
 		<div className="mb-6">
 			<div className="flex justify-between items-center mb-8">
-				<h1 className="text-3xl font-bold tracking-tight">
+				<h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
 					Welcome back, Trader
 				</h1>
 				<div className="flex items-center gap-4">
@@ -24,7 +24,7 @@ export function DashboardHeader() {
 				</div>
 			</div>
 
-			<p className="text-gray-400">
+			<p className="text-gray-600 dark:text-gray-400">
 				Continue your trading journey where you left off.
 			</p>
 		</div>
