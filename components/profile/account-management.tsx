@@ -116,7 +116,7 @@ export default function AccountManagement() {
           )}
         </CardContent>
         <CardFooter>
-          <Button onClick={handleExportData} disabled={isExporting} className="w-full">
+          <Button variant="outline" onClick={handleExportData} disabled={isExporting} className="w-full">
             <Download className="h-4 w-4 mr-2" />
             {isExporting ? "Preparing export..." : "Export my data"}
           </Button>

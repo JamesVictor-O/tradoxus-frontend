@@ -6,6 +6,8 @@ import { ChevronDown, Menu, X, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWallet } from "@/context/WalletProviderContext";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useTheme } from "@/context/ThemeContext";
 
 const navLinks = [
   { name: "Modules", path: "/modules" },
@@ -57,13 +59,11 @@ const navigationStructure = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
-  
-  // Use the wallet context instead of local state
   const { walletAddress, isConnecting, connectWallet, disconnectWallet } = useWallet();
-  
   const pathname = usePathname();
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
+  const { theme } = useTheme();
 
   // Check if a path is active (exact match or child route)
   const isActivePath = (path: string) => {
@@ -81,13 +81,11 @@ export function Header() {
   // Toggle dropdown on mobile
   const toggleDropdown = (name: string) => {
     setOpenDropdowns((prev) => {
-      // Close all dropdowns first
       const allClosed = Object.keys(prev).reduce((acc, key) => {
         acc[key] = false;
         return acc;
       }, {} as Record<string, boolean>);
 
-      // Then open only the requested one
       return {
         ...allClosed,
         [name]: !prev[name],
@@ -98,13 +96,11 @@ export function Header() {
   // Handle hover for desktop dropdowns
   const handleMouseEnter = (name: string) => {
     setOpenDropdowns((prev) => {
-      // Close all dropdowns first
       const allClosed = Object.keys(prev).reduce((acc, key) => {
         acc[key] = false;
         return acc;
       }, {} as Record<string, boolean>);
 
-      // Then open only the hovered one
       return {
         ...allClosed,
         [name]: true,
@@ -135,26 +131,26 @@ export function Header() {
   }, []);
 
   // Style classes
-  const activeClass = "text-blue-400 font-medium";
-  const inactiveClass = "text-gray-300 hover:text-white";
+  const activeClass = "text-blue-500 dark:text-blue-400 font-medium";
+  const inactiveClass = "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
   const dropdownItemClass =
-    "py-2 px-3 rounded-md hover:bg-gray-800 transition-colors block w-full text-center";
+    "py-2 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors block w-full text-center";
 
   return (
     <header
       className={`${
         pathname.startsWith("/admin/") || pathname === "/admin" ? "hidden" : ""
-      } border-b border-gray-800 bg-transparent relative z-50 w-full`}
+      } border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 relative z-50 w-full transition-colors duration-200`}
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Website Logo */}
-          <h1 className="text-xl font-bold text-white ml-[3%]">Tradoxus</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white ml-[3%] transition-colors duration-200">Tradoxus</h1>
 
           {/* Mobile menu toggle button */}
           <button
             type="button"
-            className="md:hidden text-gray-400 hover:text-white transition-colors"
+            className="md:hidden text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -269,14 +265,14 @@ export function Header() {
 
         {/* Mobile navigation menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute left-0 right-0 top-full bg-gray-900 border-b border-gray-800 shadow-lg animate-in slide-in-from-top-5 duration-300 w-full">
+          <div className="md:hidden absolute left-0 right-0 top-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-in slide-in-from-top-5 duration-300 w-full transition-colors duration-200">
             <nav className="flex flex-col py-4 px-4">
               {navigationStructure.map((item) => (
                 <div key={item.name} className="py-1">
                   {item.dropdown ? (
                     <div className="w-full">
                       <button
-                        className={`flex items-center justify-between w-full py-3 px-4 rounded-md hover:bg-gray-800 transition-colors ${
+                        className={`flex items-center justify-between w-full py-3 px-4 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                           isActiveDropdown(item.items || [])
                             ? activeClass
                             : inactiveClass
@@ -293,12 +289,12 @@ export function Header() {
                       </button>
 
                       {openDropdowns[item.name] && (
-                        <div className="pl-4 mt-1 border-l border-gray-800 ml-4 space-y-1">
+                        <div className="pl-4 mt-1 border-l border-gray-200 dark:border-gray-800 ml-4 space-y-1">
                           {item.items?.map((subItem) => (
                             <Link
                               key={subItem.path}
                               href={subItem.path}
-                              className={`py-2 px-4 rounded-md block hover:bg-gray-800 transition-colors ${
+                              className={`py-2 px-4 rounded-md block hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                                 isActivePath(subItem.path)
                                   ? activeClass
                                   : inactiveClass
@@ -314,7 +310,7 @@ export function Header() {
                   ) : (
                     <Link
                       href={item.path}
-                      className={`py-3 px-4 rounded-md block hover:bg-gray-800 transition-colors ${
+                      className={`py-3 px-4 rounded-md block hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                         isActivePath(item.path) ? activeClass : inactiveClass
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
@@ -324,7 +320,6 @@ export function Header() {
                   )}
                 </div>
               ))}
-
               {/* Mobile Wallet Connection */}
               <div className="py-1 mt-4 border-t border-gray-800 pt-4">
                 {walletAddress ? (
@@ -348,6 +343,11 @@ export function Header() {
                     <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
                   </button>
                 )}
+                <div className="py-1">
+                  <div className="py-3 px-4">
+                    <ThemeToggle />
+                  </div>
+                </div>
               </div>
             </nav>
           </div>
