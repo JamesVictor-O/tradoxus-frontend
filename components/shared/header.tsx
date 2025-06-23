@@ -1,24 +1,25 @@
+// components/Header.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useWallet } from "@/context/WalletProviderContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useTheme } from "@/context/ThemeContext";
 
 const navLinks = [
-	{ name: "Modules", path: "/modules" },
-	{ name: "Problem", path: "/problem" },
-	{ name: "Solution", path: "/solution" },
-	{ name: "Benefits", path: "/benefits" },
-	{ name: "Gamification", path: "/gamification" },
-	{ name: "Web3", path: "/web3" },
-	{ name: "Dashboard", path: "/dashboard" },
-	{ name: "Profile", path: "/tradingdemo" },
+  { name: "Modules", path: "/modules" },
+  { name: "Problem", path: "/problem" },
+  { name: "Solution", path: "/solution" },
+  { name: "Benefits", path: "/benefits" },
+  { name: "Gamification", path: "/gamification" },
+  { name: "Web3", path: "/web3" },
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "Profile", path: "/tradingdemo" },
   { name: "Journal", path: "/journal" },
 ];
-
 
 // Navigation structure with dropdowns
 const navigationStructure = [
@@ -58,6 +59,7 @@ const navigationStructure = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
+  const { walletAddress, isConnecting, connectWallet, disconnectWallet } = useWallet();
   const pathname = usePathname();
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
@@ -79,13 +81,11 @@ export function Header() {
   // Toggle dropdown on mobile
   const toggleDropdown = (name: string) => {
     setOpenDropdowns((prev) => {
-      // Close all dropdowns first
       const allClosed = Object.keys(prev).reduce((acc, key) => {
         acc[key] = false;
         return acc;
       }, {} as Record<string, boolean>);
 
-      // Then open only the requested one
       return {
         ...allClosed,
         [name]: !prev[name],
@@ -96,13 +96,11 @@ export function Header() {
   // Handle hover for desktop dropdowns
   const handleMouseEnter = (name: string) => {
     setOpenDropdowns((prev) => {
-      // Close all dropdowns first
       const allClosed = Object.keys(prev).reduce((acc, key) => {
         acc[key] = false;
         return acc;
       }, {} as Record<string, boolean>);
 
-      // Then open only the hovered one
       return {
         ...allClosed,
         [name]: true,
@@ -164,75 +162,105 @@ export function Header() {
           </button>
 
           {/* Desktop navigation menu */}
-          <nav
-            ref={navRef}
-            className="hidden md:flex items-center space-x-10 text-sm mr-[3%]"
-          >
-            {navigationStructure.map((item) => (
-              <div
-                key={item.name}
-                className="relative pr-0 md:pr-2"
-                ref={(el) => {
-                  if (item.dropdown) {
-                    dropdownRefs.current[item.name] = el;
-                  }
-                }}
-              >
-                {item.dropdown ? (
-                  <>
-                    <button
-                      className={`flex items-center gap-1 transition-colors ${
-                        isActiveDropdown(item.items || [])
-                          ? activeClass
-                          : inactiveClass
+          <div className="hidden md:flex items-center space-x-10 mr-[3%]">
+            <nav
+              ref={navRef}
+              className="flex items-center space-x-10 text-sm"
+            >
+              {navigationStructure.map((item) => (
+                <div
+                  key={item.name}
+                  className="relative pr-0 md:pr-2"
+                  ref={(el) => {
+                    if (item.dropdown) {
+                      dropdownRefs.current[item.name] = el;
+                    }
+                  }}
+                >
+                  {item.dropdown ? (
+                    <>
+                      <button
+                        className={`flex items-center gap-1 transition-colors ${
+                          isActiveDropdown(item.items || [])
+                            ? activeClass
+                            : inactiveClass
+                        }`}
+                        onClick={() => toggleDropdown(item.name)}
+                        onMouseEnter={() => handleMouseEnter(item.name)}
+                        aria-expanded={openDropdowns[item.name]}
+                        aria-haspopup="true"
+                      >
+                        {item.name}
+                        <ChevronDown className="h-4 w-4" />
+                      </button>
+
+                      {/* Desktop dropdown menu */}
+                      {openDropdowns[item.name] && (
+                        <div
+                          className="absolute px-2 mt-5 ml-[-20px] w-[120px] bg-gray-900 border border-gray-800 rounded-md shadow-lg py-2 animate-in fade-in-100 duration-500"
+                          onMouseLeave={() => closeAllDropdowns()}
+                        >
+                          {item.items?.map((subItem) => (
+                            <Link
+                              key={subItem.path}
+                              href={subItem.path}
+                              className={`${dropdownItemClass} ${
+                                isActivePath(subItem.path)
+                                  ? activeClass
+                                  : inactiveClass
+                              }`}
+                              onClick={() => closeAllDropdowns()}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      href={item.path}
+                      className={`transition-colors ${
+                        isActivePath(item.path) ? activeClass : inactiveClass
                       }`}
-                      onClick={() => toggleDropdown(item.name)}
-                      onMouseEnter={() => handleMouseEnter(item.name)}
-                      aria-expanded={openDropdowns[item.name]}
-                      aria-haspopup="true"
+                      onMouseEnter={() => closeAllDropdowns()}
                     >
                       {item.name}
-                      <ChevronDown className="h-4 w-4" />
-                    </button>
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </nav>
 
-                    {/* Desktop dropdown menu */}
-                    {openDropdowns[item.name] && (
-                      <div
-                        className="absolute px-2 mt-5 ml-[-20px] w-[120px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg py-2 animate-in fade-in-100 duration-500 transition-colors duration-200"
-                        onMouseLeave={() => closeAllDropdowns()}
-                      >
-                        {item.items?.map((subItem) => (
-                          <Link
-                            key={subItem.path}
-                            href={subItem.path}
-                            className={`${dropdownItemClass} ${
-                              isActivePath(subItem.path)
-                                ? activeClass
-                                : inactiveClass
-                            }`}
-                            onClick={() => closeAllDropdowns()}
-                          >
-                            {subItem.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={item.path}
-                    className={`transition-colors ${
-                      isActivePath(item.path) ? activeClass : inactiveClass
-                    }`}
-                    onMouseEnter={() => closeAllDropdowns()}
+            {/* Wallet Connection Button */}
+            <div className="flex items-center">
+              {walletAddress ? (
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={disconnectWallet}
+                    className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:scale-105 shadow-lg shadow-green-500/25"
+                    disabled={isConnecting}
                   >
-                    {item.name}
-                  </Link>
-                )}
-              </div>
-            ))}
-            <ThemeToggle />
-          </nav>
+                    <Wallet className="w-4 h-4" />
+                    <span className="hidden sm:inline">
+                      {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+                    </span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={connectWallet}
+                  disabled={isConnecting}
+                  className="flex items-center space-x-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Wallet className="w-4 h-4" />
+                  <span className="hidden sm:inline">
+                    {isConnecting ? "Connecting..." : "Connect Wallet"}
+                  </span>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Mobile navigation menu */}
@@ -292,9 +320,33 @@ export function Header() {
                   )}
                 </div>
               ))}
-              <div className="py-1">
-                <div className="py-3 px-4">
-                  <ThemeToggle />
+              {/* Mobile Wallet Connection */}
+              <div className="py-1 mt-4 border-t border-gray-800 pt-4">
+                {walletAddress ? (
+                  <button
+                    onClick={disconnectWallet}
+                    disabled={isConnecting}
+                    className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-50"
+                  >
+                    <Wallet className="w-4 h-4" />
+                    <span>
+                      {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+                    </span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={connectWallet}
+                    disabled={isConnecting}
+                    className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 disabled:opacity-50"
+                  >
+                    <Wallet className="w-4 h-4" />
+                    <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+                  </button>
+                )}
+                <div className="py-1">
+                  <div className="py-3 px-4">
+                    <ThemeToggle />
+                  </div>
                 </div>
               </div>
             </nav>
