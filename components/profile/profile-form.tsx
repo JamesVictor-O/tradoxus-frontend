@@ -136,158 +136,228 @@ export default function ProfileForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Profile Information</CardTitle>
-        <CardDescription>Update your profile information and how others see you on the platform.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {showVerificationAlert && !isEmailVerified && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Email not verified</AlertTitle>
-            <AlertDescription className="flex items-center justify-between">
-              <span>Please verify your email address to access all features.</span>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleVerifyEmail}>
-                  Resend verification
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowVerificationAlert(false)}>
-                  Dismiss
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
+      <Card className="w-full">
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="text-xl sm:text-2xl">Profile Information</CardTitle>
+          <CardDescription className="text-sm sm:text-base">
+            Update your profile information and how others see you on the platform.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="px-4 sm:px-6 space-y-6">
+          {showVerificationAlert && !isEmailVerified && (
+            <Alert variant="destructive" className="w-full">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <AlertTitle className="text-sm sm:text-base">Email not verified</AlertTitle>
+              <AlertDescription className="mt-2 space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+                <span className="text-sm block sm:inline">
+                  Please verify your email address to access all features.
+                </span>
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleVerifyEmail}
+                    className="w-full sm:w-auto text-xs sm:text-sm"
+                  >
+                    Resend verification
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setShowVerificationAlert(false)}
+                    className="w-full sm:w-auto text-xs sm:text-sm"
+                  >
+                    Dismiss
+                  </Button>
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+            {/* Avatar Section - Mobile: Full width, Desktop: Fixed width */}
+            <div className="flex flex-col items-center gap-3 w-full lg:w-auto lg:shrink-0">
+              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28">
+                <AvatarImage 
+                  src={avatarPreview || "/placeholder.svg?height=96&width=96"} 
+                  alt="Profile picture" 
+                  className="object-cover"
+                />
+                <AvatarFallback className="text-lg sm:text-xl">JD</AvatarFallback>
+              </Avatar>
+              <div className="relative w-full max-w-xs">
+                <Input 
+                  type="file" 
+                  id="avatar" 
+                  className="sr-only" 
+                  accept="image/*" 
+                  onChange={handleAvatarChange} 
+                />
+                <Button variant="outline" size="sm" asChild className="w-full">
+                  <label htmlFor="avatar" className="cursor-pointer flex items-center justify-center gap-2">
+                    <Upload className="h-4 w-4" />
+                    <span className="text-xs sm:text-sm">Change avatar</span>
+                  </label>
                 </Button>
               </div>
-            </AlertDescription>
-          </Alert>
-        )}
+            </div>
 
-        <div className="flex flex-col md:flex-row gap-6 items-start">
-          <div className="flex flex-col items-center gap-2">
-            <Avatar className="h-24 w-24">
-              <AvatarImage src={avatarPreview || "/placeholder.svg?height=96&width=96"} alt="Profile picture" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="relative">
-              <Input type="file" id="avatar" className="sr-only" accept="image/*" onChange={handleAvatarChange} />
-              <Button variant="outline" size="sm" asChild>
-                <label htmlFor="avatar" className="cursor-pointer flex items-center gap-2">
-                  <Upload className="h-4 w-4" />
-                  Change avatar
-                </label>
-              </Button>
+            {/* Form Section - Takes remaining space */}
+            <div className="w-full lg:flex-1 min-w-0">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                  {/* Name and Username Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Your name" 
+                              {...field} 
+                              className="w-full"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Username</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="username" 
+                              {...field} 
+                              className="w-full"
+                            />
+                          </FormControl>
+                          <FormDescription className="text-xs">
+                            Your unique username on the platform.
+                          </FormDescription>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Email Field */}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm font-medium">
+                          <span>Email</span>
+                          {isEmailVerified ? (
+                            <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200 w-fit">
+                              <Check className="h-3 w-3 mr-1" /> Verified
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200 w-fit">
+                              Not verified
+                            </Badge>
+                          )}
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="email@example.com" 
+                            {...field} 
+                            className="w-full"
+                            type="email"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Website and Location Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="website"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Website</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="https://example.com" 
+                              {...field} 
+                              className="w-full"
+                              type="url"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="location"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Location</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="City, Country" 
+                              {...field} 
+                              className="w-full"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Bio Field */}
+                  <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium">Bio</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Tell us a little bit about yourself" 
+                            className="resize-none w-full min-h-[100px] sm:min-h-[120px]" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs">
+                          Brief description for your profile. Maximum 160 characters.
+                        </FormDescription>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Submit Button */}
+                  <div className="pt-4">
+                    <Button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto min-w-[120px]"
+                    >
+                      {isSubmitting ? "Saving..." : "Save changes"}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
             </div>
           </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input placeholder="username" {...field} />
-                      </FormControl>
-                      <FormDescription>Your unique username on the platform.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      Email
-                      {isEmailVerified ? (
-                        <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
-                          <Check className="h-3 w-3 mr-1" /> Verified
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
-                          Not verified
-                        </Badge>
-                      )}
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="email@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="website"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Website</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Location</FormLabel>
-                      <FormControl>
-                        <Input placeholder="City, Country" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="bio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bio</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Tell us a little bit about yourself" className="resize-none" {...field} />
-                    </FormControl>
-                    <FormDescription>Brief description for your profile. Maximum 160 characters.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button variant="outline" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save changes"}
-              </Button>
-            </form>
-          </Form>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
-

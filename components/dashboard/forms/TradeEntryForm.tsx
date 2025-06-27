@@ -50,11 +50,10 @@ export default function TradeEntryForm() {
 
       setSuccessMessage("Trade saved successfully!");
       setErrorMessage("");
-      form.reset(); // Clear form
+      form.reset();
     } catch (error) {
       console.error("❌ Error submitting trade:", error);
       let errorMessage = "Failed to save trade.";
-      // Extract more specific error information if available
       if (error instanceof Error) {
         errorMessage += ` ${error.message}`;
       } else if (typeof error === "string") {
@@ -66,95 +65,127 @@ export default function TradeEntryForm() {
   };
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-6 max-w-md">
-      {successMessage && (
-        <p className="text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
-          {successMessage}
-        </p>
-      )}
-      {errorMessage && (
-        <p className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-md">
-          {errorMessage}
-        </p>
-      )}     
-      
-      <div className="space-y-2">
-        <Label htmlFor="ticker" className="text-gray-700 dark:text-gray-300">Ticker</Label>
-        <Input 
-          {...form.register("ticker")} 
-          placeholder="e.g. AAPL"
-          className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">Date</Label>
-        <Input 
-          type="date" 
-          {...form.register("date")}
-          className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="direction" className="text-gray-700 dark:text-gray-300">Direction</Label>
-        <Select
-          defaultValue={form.getValues("direction")}
-          onValueChange={(val: "long" | "short") => form.setValue("direction", val)}
-        >
-          <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100">
-            <SelectValue placeholder="Select direction" />
-          </SelectTrigger>
-          <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
-            <SelectItem value="long" className="text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">Long</SelectItem>
-            <SelectItem value="short" className="text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">Short</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="entryPrice" className="text-gray-700 dark:text-gray-300">Entry Price</Label>
-        <Input 
-          type="number" 
-          step="0.01" 
-          {...form.register("entryPrice", { valueAsNumber: true })}
-          className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="exitPrice" className="text-gray-700 dark:text-gray-300">Exit Price</Label>
-        <Input 
-          type="number" 
-          step="0.01" 
-          {...form.register("exitPrice", { valueAsNumber: true })}
-          className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="notes" className="text-gray-700 dark:text-gray-300">Notes</Label>
-        <Textarea 
-          {...form.register("notes")}
-          className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="tags" className="text-gray-700 dark:text-gray-300">Tags (comma-separated)</Label>
-        <Input 
-          {...form.register("tags")} 
-          placeholder="e.g. breakout,earnings"
-          className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-        />
-      </div>
-
-      <Button 
-        type="submit"
-        className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white"
+    <div className="w-full max-w-md mx-auto p-4 sm:p-6">
+      <form 
+        onSubmit={form.handleSubmit(onSubmit)} 
+        className="space-y-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 border border-gray-200 dark:border-gray-700"
       >
-        Save Trade
-      </Button>
-    </form>
+        {/* Status Messages */}
+        {successMessage && (
+          <div className="p-3 rounded-md bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="p-3 rounded-md bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400">
+            {errorMessage}
+          </div>
+        )}
+
+        {/* Form Grid Layout - 2 columns on larger screens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Ticker */}
+          <div className="space-y-2 md:col-span-1">
+            <Label htmlFor="ticker">Ticker Symbol</Label>
+            <Input
+              id="ticker"
+              {...form.register("ticker")}
+              placeholder="AAPL"
+              className="w-full"
+            />
+          </div>
+
+          {/* Date */}
+          <div className="space-y-2 md:col-span-1">
+            <Label htmlFor="date">Trade Date</Label>
+            <Input
+              id="date"
+              type="date"
+              {...form.register("date")}
+              className="w-full"
+            />
+          </div>
+
+          {/* Direction */}
+          <div className="space-y-2 md:col-span-1">
+            <Label htmlFor="direction">Direction</Label>
+            <Select
+              defaultValue={form.getValues("direction")}
+              onValueChange={(val: "long" | "short") => form.setValue("direction", val)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select direction" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="long">Long</SelectItem>
+                <SelectItem value="short">Short</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Entry Price */}
+          <div className="space-y-2 md:col-span-1">
+            <Label htmlFor="entryPrice">Entry Price ($)</Label>
+            <Input
+              id="entryPrice"
+              type="number"
+              step="0.01"
+              {...form.register("entryPrice", { valueAsNumber: true })}
+              className="w-full"
+            />
+          </div>
+
+          {/* Exit Price */}
+          <div className="space-y-2 md:col-span-1">
+            <Label htmlFor="exitPrice">Exit Price ($)</Label>
+            <Input
+              id="exitPrice"
+              type="number"
+              step="0.01"
+              {...form.register("exitPrice", { valueAsNumber: true })}
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        {/* Full-width fields */}
+        <div className="space-y-4">
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Trade Notes</Label>
+            <Textarea
+              id="notes"
+              {...form.register("notes")}
+              placeholder="Enter your trade analysis..."
+              rows={4}
+              className="w-full"
+            />
+          </div>
+
+          {/* Tags */}
+          <div className="space-y-2">
+            <Label htmlFor="tags">Tags</Label>
+            <Input
+              id="tags"
+              {...form.register("tags")}
+              placeholder="breakout, earnings, gap-fill"
+              className="w-full"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Separate multiple tags with commas
+            </p>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          className="w-full mt-4 py-3 text-base font-medium"
+          size="lg"
+        >
+          Save Trade
+        </Button>
+      </form>
+    </div>
   );
 }

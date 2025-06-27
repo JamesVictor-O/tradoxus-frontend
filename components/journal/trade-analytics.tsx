@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
 import { mistakes, strategies } from '@/lib/mock-data';
 import { formatCurrency } from '@/lib/utils';
 import { Trade } from '@/lib/types/journal';
@@ -51,7 +51,7 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
             acc.push({ month, pnl: trade.pnl, trades: 1 });
         }
         return acc;
-    }, []);
+    }, []).sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime());
 
     const winningTrades = trades.filter(t => t.pnl > 0);
     const losingTrades = trades.filter(t => t.pnl < 0);
@@ -71,71 +71,123 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
     const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
 
     return (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
+        <div className="space-y-4 md:space-y-6 px-2 sm:px-4">
+            {/* Strategy Performance Charts */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+                <Card className="h-full">
                     <CardHeader>
                         <CardTitle>Performance by Strategy</CardTitle>
                         <CardDescription>P&L breakdown by trading strategy</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={strategyPerformance}>
+                    <CardContent className="h-[300px] sm:h-[400px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart 
+                                data={strategyPerformance}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                            >
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="strategy" angle={-45} textAnchor="end" height={100} />
-                                <YAxis />
-                                <Tooltip formatter={(value) => [formatCurrency(Number(value)), 'P&L']} />
-                                <Bar dataKey="pnl" fill="#3b82f6" />
+                                <XAxis 
+                                    dataKey="strategy" 
+                                    angle={-45} 
+                                    textAnchor="end" 
+                                    height={70}
+                                    tick={{ fontSize: 12 }}
+                                />
+                                <YAxis 
+                                    tickFormatter={(value) => formatCurrency(value)}
+                                    tick={{ fontSize: 12 }}
+                                />
+                                <Tooltip 
+                                    formatter={(value) => [formatCurrency(Number(value)), 'P&L']}
+                                    contentStyle={{ borderRadius: '0.5rem', fontSize: 14 }}
+                                />
+                                <Legend />
+                                <Bar 
+                                    dataKey="pnl" 
+                                    name="Profit/Loss"
+                                    fill="#3b82f6"
+                                    radius={[4, 4, 0, 0]}
+                                />
                             </BarChart>
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="h-full">
                     <CardHeader>
                         <CardTitle>Win Rate by Strategy</CardTitle>
                         <CardDescription>Success rate for each strategy</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
+                    <CardContent className="h-[300px] sm:h-[400px]">
+                        <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
                                     data={strategyPerformance}
                                     cx="50%"
                                     cy="50%"
                                     labelLine={false}
-                                    label={({ strategy, winRate }) => `${strategy}: ${winRate}%`}
+                                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                                     outerRadius={80}
-                                    fill="#8884d8"
+                                    innerRadius={40}
+                                    paddingAngle={5}
                                     dataKey="winRate"
+                                    nameKey="strategy"
                                 >
                                     {strategyPerformance.map((entry, index) => (
                                         <Cell key={`cell-${entry.strategy}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
-                                <Tooltip />
+                                <Tooltip 
+                                    formatter={(value, name, props) => [`${value}%`, props.payload.strategy]}
+                                    contentStyle={{ borderRadius: '0.5rem', fontSize: 14 }}
+                                />
+                                <Legend 
+                                    layout="horizontal"
+                                    verticalAlign="bottom"
+                                    height={40}
+                                />
                             </PieChart>
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
+            {/* Monthly Performance & Mistakes */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+                <Card className="h-full">
                     <CardHeader>
                         <CardTitle>Monthly Performance</CardTitle>
                         <CardDescription>P&L trends over time</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={monthlyPnL}>
+                    <CardContent className="h-[300px] sm:h-[400px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart 
+                                data={monthlyPnL}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                            >
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip formatter={(value) => [formatCurrency(Number(value)), 'P&L']} />
-                                <Bar dataKey="pnl" fill="#10b981">
-                                    {monthlyPnL.map((entry) => (
-                                        <Cell key={`cell-${entry.month}`} fill={entry.pnl >= 0 ? '#10b981' : '#ef4444'} />
+                                <XAxis 
+                                    dataKey="month" 
+                                    tick={{ fontSize: 12 }}
+                                />
+                                <YAxis 
+                                    tickFormatter={(value) => formatCurrency(value)}
+                                    tick={{ fontSize: 12 }}
+                                />
+                                <Tooltip 
+                                    formatter={(value) => [formatCurrency(Number(value)), 'P&L']}
+                                    contentStyle={{ borderRadius: '0.5rem', fontSize: 14 }}
+                                />
+                                <Legend />
+                                <Bar 
+                                    dataKey="pnl" 
+                                    name="Monthly P&L"
+                                >
+                                    {monthlyPnL.map((entry, index) => (
+                                        <Cell 
+                                            key={`cell-${entry.month}`} 
+                                            fill={entry.pnl >= 0 ? '#10b981' : '#ef4444'} 
+                                        />
                                     ))}
                                 </Bar>
                             </BarChart>
@@ -146,21 +198,26 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                 <Card>
                     <CardHeader>
                         <CardTitle>Mistake Analysis</CardTitle>
-                        <CardDescription>Most common trading mistakes</CardDescription>
+                        <CardDescription>Most common trading mistakes and their impact</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                             {mistakeAnalysis.map((item) => (
-                                <div key={item.mistake} className="flex items-center justify-between p-3 border rounded-lg">
-                                    <div>
-                                        <div className="font-medium">{item.mistake}</div>
-                                        <div className="text-sm text-gray-600">{item.count} occurrence{item.count !== 1 ? 's' : ''}</div>
+                                <div 
+                                    key={item.mistake} 
+                                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-medium text-sm sm:text-base truncate">{item.mistake}</div>
+                                        <div className="text-xs sm:text-sm text-gray-600 mt-1">
+                                            {item.count} occurrence{item.count !== 1 ? 's' : ''}
+                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <div className={`font-medium ${item.avgLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    <div className="text-right mt-2 sm:mt-0 sm:ml-4">
+                                        <div className={`font-medium text-sm sm:text-base ${item.avgLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                                             {formatCurrency(item.avgLoss)}
                                         </div>
-                                        <div className="text-sm text-gray-600">avg impact</div>
+                                        <div className="text-xs sm:text-sm text-gray-600">avg impact</div>
                                     </div>
                                 </div>
                             ))}
@@ -169,61 +226,66 @@ export const TradeAnalytics = ({ trades }: analyticsProps) => {
                 </Card>
             </div>
 
+            {/* Performance Summary */}
             <Card>
                 <CardHeader>
                     <CardTitle>Performance Summary</CardTitle>
-                    <CardDescription>Detailed statistics breakdown</CardDescription>
+                    <CardDescription>Key trading metrics and statistics</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="space-y-2">
-                            <h4 className="font-medium">Winning Trades</h4>
-                            <div className="space-y-1">
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Count:</span>
-                                    <span>{trades.filter(t => t.pnl > 0).length}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                        <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 className="font-medium text-lg mb-3">Winning Trades</h4>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Count:</span>
+                                    <span className="font-medium">{winningTrades.length}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Avg:</span>
-                                    <span className="text-green-600">{formatCurrency(avgWinningTrade)}</span>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Average:</span>
+                                    <span className="font-medium text-green-600">{formatCurrency(avgWinningTrade)}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Total:</span>
-                                    <span className="text-green-600">{formatCurrency(trades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0))}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <h4 className="font-medium">Losing Trades</h4>
-                            <div className="space-y-1">
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Count:</span>
-                                    <span>{trades.filter(t => t.pnl < 0).length}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Avg:</span>
-                                    <span className="text-red-600">{formatCurrency(avgLosingTrade)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Total:</span>
-                                    <span className="text-red-600">{formatCurrency(trades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0))}</span>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Total:</span>
+                                    <span className="font-medium text-green-600">{formatCurrency(totalWins)}</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <h4 className="font-medium">Risk Metrics</h4>
-                            <div className="space-y-1">
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Profit Factor:</span>
-                                    <span>{profitFactor}</span>
+
+                        <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 className="font-medium text-lg mb-3">Losing Trades</h4>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Count:</span>
+                                    <span className="font-medium">{losingTrades.length}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Win Rate:</span>
-                                    <span>{winRate.toFixed(2)}%</span>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Average:</span>
+                                    <span className="font-medium text-red-600">{formatCurrency(avgLosingTrade)}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="text-sm text-gray-600">Avg Trade:</span>
-                                      <span>{formatCurrency(trades.length > 0 ? totalPnL / trades.length : 0)}</span>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Total:</span>
+                                    <span className="font-medium text-red-600">-{formatCurrency(totalLosses)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <h4 className="font-medium text-lg mb-3">Risk Metrics</h4>
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Profit Factor:</span>
+                                    <span className="font-medium">{profitFactor.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Win Rate:</span>
+                                    <span className="font-medium">{winRate.toFixed(2)}%</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm sm:text-base text-gray-600">Total P&L:</span>
+                                    <span className={`font-medium ${totalPnL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                        {formatCurrency(totalPnL)}
+                                    </span>
                                 </div>
                             </div>
                         </div>

@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 export function usePortfolio() {
-  interface Portfolio {
-   
-    id: number
-    name: string
-    value: number
-  }
+ interface Portfolio {
+  totalValue?: number
+  cashBalance?: number
+  dailyChange?: number
+  dailyChangePercent?: number
+  dayTradingBuyingPower?: number
+  totalPositions?: number
+}
 
 
   const [isLoading, setIsLoading] = useState(true)

@@ -118,30 +118,35 @@ const solutionSections: {
 
 export default function SolutionPage() {
   return (
-    <main className="container mx-auto min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-8">
-            The Tradoxus Solution
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Tradoxus solves the critical problems in crypto trading education
-            through a gamified educational web-app that provides safe, practical
-            learning experiences.
-          </p>
-        </div>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 sm:mb-6 lg:mb-8">
+              The Tradoxus Solution
+            </h1>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl lg:max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
+              Tradoxus solves the critical problems in crypto trading education
+              through a gamified educational web-app that provides safe, practical
+              learning experiences.
+            </p>
+          </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {solutionSections.map((section, index) => (
-            <SectionCard
-              key={index}
-              icon={section.icon}
-              title={section.title}
-              items={section.items}
-            />
-          ))}
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {solutionSections.map((section, index) => (
+              <SectionCard
+                key={index}
+                icon={section.icon}
+                title={section.title}
+                items={section.items}
+              />
+            ))}
+          </div>
+
+          {/* Optional Bottom Spacing */}
+          <div className="mt-12 sm:mt-16 lg:mt-20" />
         </div>
       </div>
     </main>
