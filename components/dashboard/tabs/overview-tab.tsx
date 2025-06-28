@@ -49,6 +49,7 @@ export function OverviewTab() {
 					description="Practice with virtual funds"
 					icon={Play}
 					variant="primary"
+					href="/trading-simulation"
 				/>
 				<ActionCard
 					title="Review Past Lessons"
