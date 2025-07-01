@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 export function usePortfolio() {
-  interface Portfolio {
-   
-    id: number
-    name: string
-    value: number
-  }
+ interface Portfolio {
+  totalValue?: number
+  cashBalance?: number
+  dailyChange?: number
+  dailyChangePercent?: number
+  dayTradingBuyingPower?: number
+  totalPositions?: number
+}
 
 
   const [isLoading, setIsLoading] = useState(true)
@@ -19,7 +21,7 @@ export function usePortfolio() {
     async function loadPortfolio() {
       try {
         setIsLoading(true)
-        const response =  axios.get<Portfolio>('/api/portfolio')
+         const response = await axios.get<Portfolio>('/api/portfolio')
         setPortfolio(response.data)
         setError(null)
       } catch (err) {

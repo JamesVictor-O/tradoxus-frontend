@@ -118,30 +118,35 @@ const solutionSections: {
 
 export default function SolutionPage() {
   return (
-    <main className="container mx-auto min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-8">
-            The Tradoxus Solution
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Tradoxus solves the critical problems in crypto trading education
-            through a gamified educational web-app that provides safe, practical
-            learning experiences.
-          </p>
-        </div>
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12 lg:py-16 xl:py-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Section */}
+          <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-24">
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold tracking-tight text-gray-900 dark:text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 px-2 sm:px-0">
+              The Tradoxus Solution
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-600 dark:text-gray-400 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto leading-relaxed px-3 sm:px-4 md:px-0">
+              Tradoxus solves the critical problems in crypto trading education
+              through a gamified educational web-app that provides safe,
+              practical learning experiences.
+            </p>
+          </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {solutionSections.map((section, index) => (
-            <SectionCard
-              key={index}
-              icon={section.icon}
-              title={section.title}
-              items={section.items}
-            />
-          ))}
+          {/* Features Grid - Responsive across all screen sizes */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10">
+            {solutionSections.map((section, index) => (
+             <SectionCard
+               key={section.title}
+               icon={section.icon}
+               title={section.title}
+               items={section.items}
+             />
+            ))}
+          </div>
+
+          {/* Bottom Spacing */}
+          <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-24" />
         </div>
       </div>
     </main>

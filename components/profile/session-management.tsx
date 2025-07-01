@@ -142,99 +142,153 @@ export default function SessionManagement() {
     }, [])
 
     return (
-        <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Active Sessions</CardTitle>
-                    <CardDescription>Manage your active sessions across different devices.</CardDescription>
+        <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+            <Card className="w-full">
+                <CardHeader className="px-4 sm:px-6">
+                    <CardTitle className="text-xl sm:text-2xl">Active Sessions</CardTitle>
+                    <CardDescription className="text-sm sm:text-base">
+                        Manage your active sessions across different devices.
+                    </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
+                <CardContent className="px-4 sm:px-6">
+                    <div className="space-y-4 sm:space-y-6">
                         {sessions.map((session) => (
-                            <div key={session.id} className="flex items-start justify-between border-b pb-4 last:border-0 last:pb-0">
-                                <div className="flex gap-3">
-                                    <div className="mt-1 bg-secondary rounded-md h-fit p-1">
+                            <div 
+                                key={session.id} 
+                                className="flex flex-col sm:flex-row sm:items-start sm:justify-between border-b pb-4 last:border-0 last:pb-0 gap-3 sm:gap-4"
+                            >
+                                <div className="flex gap-3 flex-1 min-w-0">
+                                    {/* Device Icon */}
+                                    <div className="mt-1 bg-secondary rounded-md h-fit p-2 shrink-0">
                                         {session.icon === "laptop" ? (
-                                            <Laptop className="h-5 w-5 text-primary" />
+                                            <Laptop className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                                         ) : (
-                                            <Smartphone className="h-5 w-5 text-primary" />
+                                            <Smartphone className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                                         )}
                                     </div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <h4 className="font-medium">
-                                                {session.device} • {session.browser}
+                                    
+                                    {/* Session Details */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                            <h4 className="font-medium text-sm sm:text-base leading-tight">
+                                                <span className="block sm:inline">{session.device}</span>
+                                                <span className="hidden sm:inline"> • </span>
+                                                <span className="block sm:inline text-muted-foreground sm:text-current">
+                                                    {session.browser}
+                                                </span>
                                             </h4>
                                             {session.isCurrent && (
-                                                <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                                                <Badge 
+                                                    variant="outline" 
+                                                    className="text-xs bg-green-50 text-green-700 border-green-200 w-fit shrink-0"
+                                                >
                                                     Current
                                                 </Badge>
                                             )}
                                         </div>
-                                        <p className="text-sm text-muted-foreground mt-1">
-                                            {session.location} • {session.ip}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground mt-1">{session.lastActive}</p>
+                                        
+                                        {/* Location and IP */}
+                                        <div className="space-y-1">
+                                            <p className="text-xs sm:text-sm text-muted-foreground break-all">
+                                                <span className="block sm:inline">{session.location}</span>
+                                                <span className="hidden sm:inline"> • </span>
+                                                <span className="block sm:inline">{session.ip}</span>
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {session.lastActive}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+                                
+                                {/* Action Button */}
                                 {!session.isCurrent && (
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="ghost" size="sm">
-                                                <LogOut className="h-4 w-4" />
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Terminate Session</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    Are you sure you want to terminate this session? This will log out the device immediately.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleTerminateSession(session.id)}>
-                                                    Terminate
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
+                                    <div className="flex justify-end sm:justify-start shrink-0">
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    size="sm" 
+                                                    className="h-8 w-8 sm:h-9 sm:w-9 p-0"
+                                                >
+                                                    <LogOut className="h-4 w-4" />
+                                                    <span className="sr-only">Terminate session</span>
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent className="mx-4 max-w-md">
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle className="text-lg">
+                                                        Terminate Session
+                                                    </AlertDialogTitle>
+                                                    <AlertDialogDescription className="text-sm">
+                                                        Are you sure you want to terminate this session? This will log out the device immediately.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                                                    <AlertDialogCancel className="w-full sm:w-auto">
+                                                        Cancel
+                                                    </AlertDialogCancel>
+                                                    <AlertDialogAction 
+                                                        onClick={() => handleTerminateSession(session.id)}
+                                                        className="w-full sm:w-auto"
+                                                    >
+                                                        Terminate
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
                                 )}
                             </div>
                         ))}
                     </div>
                 </CardContent>
-                <CardFooter className="flex justify-between">
-                    <Button variant="outline" onClick={handleRefreshToken}>
+                
+                {/* Card Footer with Action Buttons */}
+                <CardFooter className="px-4 sm:px-6 flex flex-col sm:flex-row gap-3 sm:justify-between">
+                    <Button 
+                        variant="outline" 
+                        onClick={handleRefreshToken}
+                        className="w-full sm:w-auto order-2 sm:order-1"
+                    >
                         <RefreshCw className="h-4 w-4 mr-2" />
-                        Refresh token
+                        <span className="text-sm">Refresh token</span>
                     </Button>
 
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <Button variant="destructive">
+                            <Button 
+                                variant="destructive"
+                                className="w-full sm:w-auto order-1 sm:order-2"
+                            >
                                 <LogOut className="h-4 w-4 mr-2" />
-                                Terminate all other sessions
+                                <span className="text-sm">Terminate all other sessions</span>
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent>
+                        <AlertDialogContent className="mx-4 max-w-md">
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Terminate All Other Sessions</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Are you sure you want to terminate all other sessions? This will log out all devices except the
-                                    current one.
+                                <AlertDialogTitle className="text-lg">
+                                    Terminate All Other Sessions
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="text-sm">
+                                    Are you sure you want to terminate all other sessions? This will log out all devices except the current one.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleTerminateAllOtherSessions}>Terminate All</AlertDialogAction>
+                            <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                                <AlertDialogCancel className="w-full sm:w-auto">
+                                    Cancel
+                                </AlertDialogCancel>
+                                <AlertDialogAction 
+                                    onClick={handleTerminateAllOtherSessions}
+                                    className="w-full sm:w-auto"
+                                >
+                                    Terminate All
+                                </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
                 </CardFooter>
             </Card>
-
         </div>
     )
 }
-
