@@ -108,7 +108,7 @@ export function LearningPathCard({
         <div className="space-y-2 sm:space-y-3">
           {modules.map((module, index) => (
             <div
-              key={index}
+              key={`${module.title}-${index}`}
               className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300"
             >
               {module.completed ? (

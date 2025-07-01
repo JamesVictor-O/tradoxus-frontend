@@ -38,6 +38,7 @@ const Sidebar = ({ onClose }: SidebarProps = {}) => {
 
           {onClose && (
             <button
+              type="button" 
               onClick={onClose}
               className="md:hidden p-1.5 sm:p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200"
               aria-label="Close sidebar"
@@ -198,6 +199,7 @@ const Sidebar = ({ onClose }: SidebarProps = {}) => {
             </div>
           </div>
           <button
+            type="button"  
             className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all duration-200"
             onClick={toggleTheme}
             aria-label="Toggle theme"
