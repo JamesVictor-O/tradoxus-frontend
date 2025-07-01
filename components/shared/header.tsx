@@ -58,9 +58,12 @@ const navigationStructure = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
+    {}
+  );
   const [isMobile, setIsMobile] = useState(false);
-  const { walletAddress, isConnecting, connectWallet, disconnectWallet } = useWallet();
+  const { walletAddress, isConnecting, connectWallet, disconnectWallet } =
+    useWallet();
   const pathname = usePathname();
   const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const navRef = useRef<HTMLElement>(null);
@@ -72,11 +75,11 @@ export function Header() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Check if a path is active (exact match or child route)
@@ -141,7 +144,7 @@ export function Header() {
   // Handle mouse leave for desktop
   const handleMouseLeave = () => {
     if (isMobile) return;
-    
+
     setTimeout(() => {
       setOpenDropdowns({});
     }, 150); // Small delay to prevent flickering
@@ -162,7 +165,7 @@ export function Header() {
   const handleWalletAction = async (event: React.MouseEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    
+
     try {
       if (walletAddress) {
         await disconnectWallet();
@@ -170,7 +173,7 @@ export function Header() {
         await connectWallet();
       }
     } catch (error) {
-      console.error('Wallet action failed:', error);
+      console.error("Wallet action failed:", error);
     }
   };
 
@@ -179,8 +182,9 @@ export function Header() {
     const handleClickOutside = (event: MouseEvent | Event) => {
       const target = event.target as Node;
       const isOutsideNav = navRef.current && !navRef.current.contains(target);
-      const isOutsideMobileMenu = mobileMenuRef.current && !mobileMenuRef.current.contains(target);
-      
+      const isOutsideMobileMenu =
+        mobileMenuRef.current && !mobileMenuRef.current.contains(target);
+
       if (isOutsideNav && (isMobile ? isOutsideMobileMenu : true)) {
         closeAllDropdowns();
       }
@@ -188,41 +192,42 @@ export function Header() {
 
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("touchstart", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [isMobile]);
+  }, [isMobile, closeAllDropdowns]);
 
   // Handle escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         closeMobileMenu();
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [closeMobileMenu]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
 
   // Style classes
   const activeClass = "text-blue-500 dark:text-blue-400 font-medium";
-  const inactiveClass = "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
+  const inactiveClass =
+    "text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
   const dropdownItemClass =
     "py-2 px-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors block w-full text-left";
 
@@ -309,7 +314,9 @@ export function Header() {
                               }`}
                               onClick={() => closeAllDropdowns()}
                             >
-                              <span className="whitespace-nowrap">{subItem.name}</span>
+                              <span className="whitespace-nowrap">
+                                {subItem.name}
+                              </span>
                             </Link>
                           ))}
                         </div>
@@ -334,17 +341,21 @@ export function Header() {
             <div className="flex items-center ml-4 lg:ml-6">
               {walletAddress ? (
                 <button
+                 type="button"
                   onClick={handleWalletAction}
                   className="flex items-center space-x-1 lg:space-x-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 px-3 lg:px-4 py-2 rounded-lg font-medium text-xs lg:text-sm transition-all duration-300 hover:scale-105 shadow-lg shadow-green-500/25 disabled:opacity-50"
                   disabled={isConnecting}
                 >
                   <Wallet className="w-4 h-4 flex-shrink-0" />
                   <span className="hidden sm:inline truncate max-w-24">
-                    {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+                    {`${walletAddress.slice(0, 6)}...${walletAddress.slice(
+                      -4
+                    )}`}
                   </span>
                 </button>
               ) : (
                 <button
+                   type="button"
                   onClick={handleWalletAction}
                   disabled={isConnecting}
                   className="flex items-center space-x-1 lg:space-x-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-3 lg:px-4 py-2 rounded-lg font-medium text-xs lg:text-sm transition-all duration-300 hover:scale-105 shadow-lg shadow-cyan-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
@@ -369,13 +380,17 @@ export function Header() {
       {mobileMenuOpen && (
         <>
           {/* Backdrop */}
-          <div 
+          <div
             className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
             onClick={closeMobileMenu}
+            onKeyDown={(e) => e.key === "Escape" && closeMobileMenu()}
+            role="button"
+            tabIndex={0}
+            aria-label="Close mobile menu"
           />
-          
+
           {/* Mobile Menu - Changed positioning */}
-          <div 
+          <div
             ref={mobileMenuRef}
             className="md:hidden absolute left-0 right-0 top-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-xl z-50 max-h-[calc(100vh-100px)] overflow-y-auto transition-colors duration-200"
           >
@@ -385,6 +400,7 @@ export function Header() {
                   {item.dropdown ? (
                     <div className="w-full">
                       <button
+                       type="button"
                         className={`flex items-center justify-between w-full py-3 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 touch-manipulation ${
                           isActiveDropdown(item.items || [])
                             ? activeClass
@@ -434,18 +450,21 @@ export function Header() {
                   )}
                 </div>
               ))}
-              
+
               {/* Mobile Wallet Connection - Enhanced */}
               <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
                 {walletAddress ? (
                   <button
+                   type="button"
                     onClick={handleWalletAction}
                     disabled={isConnecting}
                     className="flex items-center justify-center space-x-3 w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 active:scale-95 px-4 py-3.5 rounded-lg font-medium text-sm transition-all duration-200 disabled:opacity-50 touch-manipulation shadow-lg text-white"
                   >
                     <Wallet className="w-5 h-5" />
                     <span>
-                      {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+                      {`${walletAddress.slice(0, 6)}...${walletAddress.slice(
+                        -4
+                      )}`}
                     </span>
                   </button>
                 ) : (
@@ -455,10 +474,12 @@ export function Header() {
                     className="flex items-center justify-center space-x-3 w-full bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 active:scale-95 px-4 py-3.5 rounded-lg font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation shadow-lg text-white"
                   >
                     <Wallet className="w-5 h-5" />
-                    <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+                    <span>
+                      {isConnecting ? "Connecting..." : "Connect Wallet"}
+                    </span>
                   </button>
                 )}
-                
+
                 {/* Mobile Theme Toggle */}
                 <div className="flex justify-center">
                   <ThemeToggle />

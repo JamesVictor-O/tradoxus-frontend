@@ -11,9 +11,7 @@ const RecentContentList = ({ courses }: RecentContentListProps) => {
     <div className="text-black dark:text-white w-full">
       {/* Header Section */}
       <div className="mb-4 md:mb-6">
-        <h2 className="text-lg sm:text-xl font-semibold">
-          Recent Content
-        </h2>
+        <h2 className="text-lg sm:text-xl font-semibold">Recent Content</h2>
         <p className="text-sm sm:text-base text-gray-500 dark:text-gray-300 mt-1">
           Recently created and updated courses
         </p>
@@ -52,7 +50,8 @@ const RecentContentList = ({ courses }: RecentContentListProps) => {
                     : "bg-yellow-500"
                 }`}
               ></div>
-              <button 
+              <button
+                type="button"
                 className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                 aria-label="More options"
               >
