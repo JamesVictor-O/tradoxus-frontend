@@ -6,7 +6,13 @@ const path = require('path');
 
 // Read coin pairs from assets.json at the project root
 const assetsPath = path.join(__dirname, 'assets.json');
-const COIN_PAIRS = JSON.parse(fs.readFileSync(assetsPath, 'utf-8'));
+let COIN_PAIRS;
+try {
+  COIN_PAIRS = JSON.parse(fs.readFileSync(assetsPath, 'utf-8'));
+} catch (err) {
+  console.error('Failed to load assets.json:', err.message);
+  process.exit(1);
+}
 const streams = COIN_PAIRS.map(s => `${s}@ticker`).join('/');
 const BINANCE_WS_URL = `wss://stream.binance.com:9443/stream?streams=${streams}`;
 
@@ -26,39 +32,43 @@ const wss = new WebSocket.Server({ server });
 let clients = [];
 let clientSelectedSymbol = new Map(); // ws -> symbol
 
+function setupBinanceHandlers(ws) {
+  ws.on('open', () => {
+    logger.info('Connected to Binance multi-stream WS');
+  });
+
+  ws.on('message', data => {
+    try {
+      const msg = JSON.parse(data);
+      if (!msg || !msg.data) return;
+      const { s: symbol, c: price, E: timestamp, P: change24h } = msg.data;
+      const update = { symbol: symbol.toLowerCase(), price, timestamp, change24h };
+      clients.forEach(ws => {
+        if (ws.readyState === WebSocket.OPEN && clientSelectedSymbol.get(ws) === symbol.toLowerCase()) {
+          ws.send(JSON.stringify(update));
+        }
+      });
+    } catch (err) {
+      logger.error(`Error parsing Binance message: ${err.message}`);
+    }
+  });
+
+  ws.on('close', () => {
+    logger.warn('Binance WS closed, reconnecting in 5s...');
+    setTimeout(() => {
+      binanceWS = new WebSocket(BINANCE_WS_URL);
+      setupBinanceHandlers(binanceWS);
+    }, 5000);
+  });
+
+  ws.on('error', err => {
+    logger.error(`Binance WS error: ${err.message}`);
+  });
+}
+
 // Connect to Binance multi-stream
 let binanceWS = new WebSocket(BINANCE_WS_URL);
-
-binanceWS.on('open', () => {
-  logger.info('Connected to Binance multi-stream WS');
-});
-
-binanceWS.on('message', data => {
-  try {
-    const msg = JSON.parse(data);
-    if (!msg || !msg.data) return;
-    const { s: symbol, c: price, E: timestamp, P: change24h } = msg.data;
-    const update = { symbol: symbol.toLowerCase(), price, timestamp, change24h };
-    clients.forEach(ws => {
-      if (ws.readyState === WebSocket.OPEN && clientSelectedSymbol.get(ws) === symbol.toLowerCase()) {
-        ws.send(JSON.stringify(update));
-      }
-    });
-  } catch (err) {
-    logger.error('Error parsing Binance message: ' + err.message);
-  }
-});
-
-binanceWS.on('close', () => {
-  logger.warn('Binance WS closed, reconnecting in 5s...');
-  setTimeout(() => {
-    binanceWS = new WebSocket(BINANCE_WS_URL);
-  }, 5000);
-});
-
-binanceWS.on('error', err => {
-  logger.error('Binance WS error: ' + err.message);
-});
+setupBinanceHandlers(binanceWS);
 
 wss.on('connection', ws => {
   clients.push(ws);

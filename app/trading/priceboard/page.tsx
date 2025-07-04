@@ -108,11 +108,6 @@ export default function PriceBoard() {
 
     connectWS();
 
-    // If coin pair changes, send new subscription
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({ action: "getPrice", symbol: selectedPair }));
-    }
-
     return () => {
       isUnmounted = true;
       if (wsRef.current) {
