@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { TrendingUp, TrendingDown, DollarSign, PieChart, RotateCcw } from "lucide-react"
-import { useState } from "react"
 
 interface Holding {
   symbol: string
@@ -23,8 +22,8 @@ interface SimulationPortfolioProps {
 }
 
 export function SimulationPortfolio({ isSimulation }: SimulationPortfolioProps) {
-  const [virtualBalance] = useState(100000) // Starting virtual balance
-  const [cashBalance] = useState(75000)
+  const virtualBalance = 100000 // Starting virtual balance
+  const cashBalance = 75000
 
   const holdings: Holding[] = [
     {

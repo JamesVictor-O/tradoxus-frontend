@@ -82,8 +82,15 @@ export function SimulationTradingInterface({ isSimulation }: SimulationTradingIn
 
     setIsLoading(true)
 
+    try {
+
     // Simulate order placement
     setTimeout(() => {
+
+      if(Math.random() < 0.1) {
+        throw new Error("Order failed - insufficient funds or market closed")
+      }
+
       const newOrder: Order = {
         id: Date.now().toString(),
         symbol: selectedSymbol,
@@ -101,6 +108,11 @@ export function SimulationTradingInterface({ isSimulation }: SimulationTradingIn
       setLimitPrice("")
       setIsLoading(false)
     }, 1000)
+    } catch (error) {
+      console.error("Order placement failed:", error);
+      setIsLoading(false)
+    }
+
   }
 
   const getStatusIcon = (status: Order["status"]) => {
@@ -222,6 +234,8 @@ export function SimulationTradingInterface({ isSimulation }: SimulationTradingIn
                 <Input
                   id="quantity"
                   type="number"
+                  min="1"
+                  step="1"
                   placeholder="Enter quantity"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
@@ -236,6 +250,7 @@ export function SimulationTradingInterface({ isSimulation }: SimulationTradingIn
                     id="limitPrice"
                     type="number"
                     step="0.01"
+                    min="0.01"
                     placeholder="Enter limit price"
                     value={limitPrice}
                     onChange={(e) => setLimitPrice(e.target.value)}
@@ -283,7 +298,7 @@ export function SimulationTradingInterface({ isSimulation }: SimulationTradingIn
                     {orderType === "market" && selectedSymbolData && (
                       <div className="flex justify-between">
                         <span>Est. Total:</span>
-                        <span>${(selectedSymbolData.price * Number.parseInt(quantity || "0")).toFixed(2)}</span>
+                        <span>${(selectedSymbolData.price * (Number.parseInt(quantity) || 0)).toFixed(2)}</span>
                       </div>
                     )}
                     {orderType === "limit" && limitPrice && (

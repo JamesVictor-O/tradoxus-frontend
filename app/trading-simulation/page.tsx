@@ -25,7 +25,7 @@ export default function TradingSimulationPage() {
       <SimulationModeToggle isSimulation={isSimulation} onToggle={setIsSimulation} />
 
       <Tabs defaultValue="portfolio" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
           <TabsTrigger value="trade">Trade</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
