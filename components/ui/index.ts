@@ -20,3 +20,4 @@ export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 export { default as Text } from "./text";
 export { Textarea } from "./textarea";
 export { Select, SelectTrigger, SelectContent,  SelectValue,SelectItem /*…*/ } from "./select";
+export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "./dialog";
