@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { Shield, Gamepad2, BarChart3 } from "lucide-react";
 import { useWallet } from "@/context/WalletProviderContext";
+import { useTranslation } from "react-i18next";
 
 const TradoxusLanding = () => {
   const [scrollY, setScrollY] = useState(0);
+  const { t } = useTranslation();
 
   // Use the wallet context instead of local state
   const { walletAddress, isConnecting, connectWallet } = useWallet();
@@ -19,29 +21,28 @@ const TradoxusLanding = () => {
   const features = [
     {
       icon: Shield,
-      title: "Safe Learning Environment",
-      description:
-        "Practice trading with real-time market data without risking your actual funds. Get immediate feedback on your decisions and learn from every trade.",
+      title: t('homepage.features.safety'),
+      description: t('homepage.features.safetyDesc'),
       gradient: "from-cyan-500 to-blue-600",
     },
     {
       icon: Gamepad2,
-      title: "Gamified Education",
-      description:
-        "Earn rewards, complete missions, and climb the rankings as you learn. Make education engaging and motivating through interactive challenges.",
+      title: t('homepage.features.education'),
+      description: t('homepage.features.educationDesc'),
       gradient: "from-teal-500 to-cyan-600",
     },
     {
       icon: BarChart3,
-      title: "Advanced Analytics",
-      description:
-        "Track your performance, develop custom indicators, and analyze your trading strategies with professional-grade tools and detailed insights.",
+      title: t('homepage.features.community'),
+      description: t('homepage.features.communityDesc'),
       gradient: "from-blue-500 to-teal-600",
     },
   ];
 
   return (
     <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
+
+      
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -54,31 +55,25 @@ const TradoxusLanding = () => {
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
             <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-              Master Crypto Trading
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-blue-400 bg-clip-text text-transparent">
-              Safely
+              {t('homepage.hero.title')}
             </span>
           </h1>
 
           <p className="text-xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Tradoxus provides a safe, practical learning environment for crypto
-            trading education through gamified experiences. Master the markets
-            without the risk.
+            {t('homepage.hero.subtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {walletAddress ? (
               <>
                 <button className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2">
-                  <span>Get Started</span>
+                  <span>{t('homepage.hero.getStarted')}</span>
                 </button>
                 <button
                   type="button"
                   className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2"
                 >
-                  <span>Explore Features</span>
+                  <span>{t('homepage.buttons.exploreFeatures')}</span>
                 </button>
               </>
             ) : (
@@ -89,14 +84,14 @@ const TradoxusLanding = () => {
                   className="group bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span>
-                    {isConnecting ? "Connecting..." : "Connect Wallet"}
+                    {isConnecting ? t('homepage.buttons.connecting') : t('homepage.buttons.connectWallet')}
                   </span>
                 </button>
                 <button
                   type="button"
                   className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-600 hover:border-cyan-400 transition-all duration-300 hover:bg-slate-800/50 flex items-center space-x-2"
                 >
-                  <span>Explore Features</span>
+                  <span>{t('homepage.buttons.exploreFeatures')}</span>
                 </button>
               </>
             )}
@@ -143,11 +138,10 @@ const TradoxusLanding = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-3xl p-12 border border-slate-700">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
-              Ready to Start Trading?
+              {t('homepage.cta.title')}
             </h2>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of traders who have mastered crypto trading in our
-              safe, gamified environment.
+              {t('homepage.cta.title')}
             </p>
             <button
               onClick={walletAddress ? undefined : connectWallet}
@@ -155,10 +149,10 @@ const TradoxusLanding = () => {
               className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 px-12 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-xl shadow-cyan-500/25 disabled:opacity-50"
             >
               {walletAddress
-                ? "Start Learning Today"
+                ? t('homepage.buttons.startLearningToday')
                 : isConnecting
-                ? "Connecting..."
-                : "Connect Wallet to Start"}
+                ? t('homepage.buttons.connecting')
+                : t('homepage.buttons.connectWalletToStart')}
             </button>
           </div>
         </div>
@@ -171,28 +165,26 @@ const TradoxusLanding = () => {
             Tradoxus
           </div>
           <p className="text-slate-400 mb-8">
-            Master crypto trading safely through gamified education
+            {t('homepage.hero.title')}
           </p>
           <div className="flex justify-center space-x-8 text-slate-400">
             <button
               type="button"
               className="hover:text-cyan-400 transition-colors"
             >
-              + Privacy +{" "}
+              {t('homepage.footer.privacy')}
             </button>
-            +{" "}
             <button
               type="button"
               className="hover:text-cyan-400 transition-colors"
             >
-              + Terms +{" "}
+              {t('homepage.footer.terms')}
             </button>
-            +{" "}
             <button
               type="button"
               className="hover:text-cyan-400 transition-colors"
             >
-              + Support +{" "}
+              {t('homepage.footer.support')}
             </button>
           </div>
         </div>

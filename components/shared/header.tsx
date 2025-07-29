@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useWallet } from "@/context/WalletProviderContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useTheme } from "@/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const navLinks = [
   { name: "Modules", path: "/modules" },
@@ -21,42 +22,44 @@ const navLinks = [
   { name: "Journal", path: "/journal" },
 ];
 
-// Navigation structure with dropdowns
-const navigationStructure = [
-  { name: "Home", path: "/", dropdown: false },
+// Function to get navigation structure with translations
+const getNavigationStructure = (t: (key: string) => string) => [
+  { name: t('navigation.home'), path: "/", dropdown: false },
   {
-    name: "Learning",
+    name: t('education.courses'),
     path: "#",
     dropdown: true,
     items: [
-      { name: "Modules", path: "/modules" },
-      { name: "Problem", path: "/problem" },
+      { name: t('education.modules'), path: "/modules" },
+      { name: t('common.problem'), path: "/problem" },
     ],
   },
   {
-    name: "Features",
+    name: t('common.features'),
     path: "#",
     dropdown: true,
     items: [
-      { name: "Solution", path: "/solution" },
-      { name: "Benefits", path: "/benefits" },
-      { name: "Gamification", path: "/gamification" },
-      { name: "Journal", path: "/journal" },
+      { name: t('common.solution'), path: "/solution" },
+      { name: t('common.benefits'), path: "/benefits" },
+      { name: t('common.gamification'), path: "/gamification" },
+      { name: t('common.journal'), path: "/journal" },
     ],
   },
-  { name: "Web3", path: "/web3", dropdown: false },
+  { name: t('header.web3'), path: "/web3", dropdown: false },
   {
-    name: "User",
+    name: t('navigation.profile'),
     path: "#",
     dropdown: true,
     items: [
-      { name: "Dashboard", path: "/dashboard" },
-      { name: "Profile", path: "/profile" },
+      { name: t('navigation.dashboard'), path: "/dashboard" },
+      { name: t('navigation.profile'), path: "/profile" },
     ],
   },
 ];
 
 export function Header() {
+  const { t, ready } = useTranslation();
+  const navigationStructure = getNavigationStructure(t);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>(
     {}
@@ -69,6 +72,26 @@ export function Header() {
   const navRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
+
+  // Show fallback while i18n is not ready
+  if (!ready) {
+    return (
+      <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-50 w-full">
+        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex-shrink-0">
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
+                Tradoxus
+              </h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="w-24 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   // Detect mobile device
   useEffect(() => {
@@ -250,7 +273,7 @@ export function Header() {
           <button
             type="button"
             className="md:hidden p-2 -mr-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-all duration-200 touch-manipulation"
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                            aria-label={mobileMenuOpen ? t('header.closeMenu') : t('header.openMenu')}
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -362,7 +385,7 @@ export function Header() {
                 >
                   <Wallet className="w-4 h-4 flex-shrink-0" />
                   <span className="hidden sm:inline whitespace-nowrap">
-                    {isConnecting ? "Connecting..." : "Connect Wallet"}
+                    {isConnecting ? t('header.connecting') : t('header.connectWallet')}
                   </span>
                 </button>
               )}
@@ -386,7 +409,7 @@ export function Header() {
             onKeyDown={(e) => e.key === "Escape" && closeMobileMenu()}
             role="button"
             tabIndex={0}
-            aria-label="Close mobile menu"
+            aria-label={t('header.closeMobileMenu')}
           />
 
           {/* Mobile Menu - Changed positioning */}
