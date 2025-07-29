@@ -3,9 +3,9 @@
     "home": "Home",
     "dashboard": "Dashboard",
     "trading": "Trading",
-    "education": "Education",
+    "education": "Gamified Education",
     "portfolio": "Portfolio",
-    "profile": "Profile",
+    "profile": "User",
     "settings": "Settings",
     "logout": "Logout",
     "navigation": "Navigation"
@@ -77,7 +77,7 @@
     "portfolio": "Portfolio"
   },
   "education": {
-    "courses": "Courses",
+    "courses": "Learning",
     "lessons": "Lessons",
     "modules": "Modules",
     "progress": "Progress",
@@ -130,22 +130,22 @@
   },
   "homepage": {
     "hero": {
-      "title": "Master crypto trading safely through gamified education",
-      "subtitle": "Learn to trade cryptocurrencies with confidence using our innovative gamified platform",
+      "title": "Master Crypto Trading",
+      "subtitle": "Tradoxus provides a safe, practical learning environment for crypto trading education through gamified experiences. Master the markets without the risk.",
       "getStarted": "Get Started",
       "learnMore": "Learn More"
     },
     "features": {
       "title": "Why Choose Tradoxus?",
       "education": "Gamified Education",
-      "educationDesc": "Learn through interactive games and challenges",
-      "safety": "Safe Trading",
-      "safetyDesc": "Practice with virtual money before real trading",
-      "community": "Community",
-      "communityDesc": "Join a community of traders and learners"
+      "educationDesc": "Earn rewards, complete missions, and climb the rankings as you learn. Make education engaging and motivating through interactive challenges.",
+      "safety": "Safe Learning Environment",
+      "safetyDesc": "Practice trading with real-time market data without risking your actual funds. Get immediate feedback on your decisions and learn from every trade.",
+      "community": "Advanced Analytics",
+      "communityDesc": "Track your performance, develop custom indicators, and analyze your trading strategies with professional-grade tools and detailed insights."
     },
     "cta": {
-      "title": "Ready to start your trading journey?",
+      "title": "Ready to Start Trading?",
       "button": "Start Learning Now"
     },
     "buttons": {
@@ -156,9 +156,9 @@
       "exploreFeatures": "Explore Features"
     },
     "footer": {
-      "privacy": "Privacy",
-      "terms": "Terms",
-      "support": "Support"
+      "privacy": "+ Privacy +",
+      "terms": "+ Terms +",
+      "support": "+ Support +"
     }
   },
   "header": {
