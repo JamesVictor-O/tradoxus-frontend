@@ -5,6 +5,12 @@ import { Footer } from "@/components/shared/footer";
 import { Header } from "@/components/shared/header";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { WalletProvider } from "@/context/WalletProviderContext";
+import { I18nProvider } from "@/components/providers/I18nProvider";
+import { LanguageSwitcherWrapper } from "@/components/LanguageSwitcherWrapper";
+import { ClientOnly } from "@/components/ClientOnly";
+import { HeaderFallback } from "@/components/HeaderFallback";
+import { FooterFallback } from "@/components/FooterFallback";
+import { LanguageSwitcherFallback } from "@/components/LanguageSwitcherFallback";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,15 +37,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <WalletProvider>
-          <ThemeProvider>
-            <div className="min-h-[calc(100vh-85px)]">
-              <Header />
+        <I18nProvider>
+          <WalletProvider>
+            <ThemeProvider>
+                                      <div className="min-h-[calc(100vh-85px)]">
+              <ClientOnly fallback={<HeaderFallback />}>
+                <Header />
+              </ClientOnly>
               {children}
             </div>
-            <Footer />
-          </ThemeProvider>
-        </WalletProvider>
+            <ClientOnly fallback={<FooterFallback />}>
+              <Footer />
+            </ClientOnly>
+            <ClientOnly fallback={<LanguageSwitcherFallback />}>
+              <LanguageSwitcherWrapper />
+            </ClientOnly>
+            </ThemeProvider>
+          </WalletProvider>
+        </I18nProvider>
       </body>
     </html>
   );
