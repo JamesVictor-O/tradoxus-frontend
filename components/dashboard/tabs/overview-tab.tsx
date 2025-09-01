@@ -1,4 +1,4 @@
-import { Award, BarChart3, BookOpen, FileText, MessageSquare, Play, Trophy } from "lucide-react";
+import { Award, BarChart3, BookOpen, FileText, MessageSquare, Play, Trophy, TrendingUp } from "lucide-react";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { ContinueLearningCard } from "@/components/dashboard/continue-learning-card";
 import { ActionCard } from "@/components/dashboard/action-card";
@@ -43,12 +43,19 @@ export function OverviewTab() {
 			<ContinueLearningCard />
 
 			{/* Quick actions */}
-			<div className="grid gap-4 md:grid-cols-3">
+			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+				<ActionCard
+					title="Portfolio Performance"
+					description="View real-time portfolio analytics"
+					icon={TrendingUp}
+					variant="primary"
+					href="/portfolio-performance"
+				/>
 				<ActionCard
 					title="Start Trading Simulation"
 					description="Practice with virtual funds"
 					icon={Play}
-					variant="primary"
+					variant="secondary"
 					href="/trading-simulation"
 				/>
 				<ActionCard
